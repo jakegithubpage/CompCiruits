@@ -17,7 +17,7 @@ set(CMAKE_C_EXTENSIONS off)
 
 # Default build config 
 if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE debug cache string "build type" FORCE)
+    set(CMAKE_BUILD_TYPE debug CACHE STRING "build type" FORCE)
 endif()
 
 #--Library(Engine)--

@@ -11,7 +11,7 @@
 
 volatile char Genre, GenreRate;
 volatile char numType, numRate;
-volatile int diffculty, diffRate;
+volatile int difficulty, diffRate;
 
 
 

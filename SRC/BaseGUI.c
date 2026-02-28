@@ -1,0 +1,2 @@
+/* intent to write a base popup window that builds a diagram with listed values 
+pulled from randomized seeding and selected options in the circuit build section*/

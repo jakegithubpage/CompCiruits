@@ -1,0 +1,2 @@
+/* Ustilize methods of mesh or nodal analysis to
+ pre solve circuits and cook solution and statistics for user when they finally finish solving and enter answer to compare*/
