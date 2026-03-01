@@ -1,7 +1,22 @@
 #pragma once
 
-#include <stddef.h>
-#include <stdint.h>
+//#include <stddef.h>
+//#include <stdint.h>
+
+
+#define CB_MAX_ERROR_STACK 8 
+#define CB_MAX_WARN_STACK  8
+
+typedef uint32_t CB_WarnMask;
+enum{
+    CB_WM_None             = 0u,
+    CB_WM_AcRealNonTypical = 1u << 0
+};
+//Warning code implementation
+enum {
+    CB_WARN_None = 0,
+    CB_WARN_AcRealNonTypical = 1001
+};
 
 //pub types - Difficulty
 typedef enum CB_difficulty{
@@ -23,18 +38,18 @@ typedef enum CB_Genre{
 } CB_Genre;
 
 //pub types - number type
-typedef enum CBnumType{
-    CB_NT_real = 0,
+typedef enum CB_numType{
+    CB_NT_Real = 0,
     CB_NT_Complex = 1,
-    CB_NT_ComRealMix = 2,
-    CB_NT_freqDomain = 3
-} CBnumType;
+    CB_NT_RealComplex = 2,
+    CB_NT_FreqDomain = 3
+} CB_numType;
 
 //struct for build combination
 typedef struct CB_buildOps{
     CB_difficulty difficulty;
     CB_Genre genre;
-    CBnumType numType;
+    CB_numType numType;
 } CB_buildOps;
 
 // Valid genre handler
@@ -44,25 +59,43 @@ static inline int CB_diffValid(CB_difficulty g) {
 static inline int CB_GenreValid(CB_Genre g) {
     return (g >= 0) && (g <= CB_G_OPAMP);
 }
-static inline int CB_numTypeValid(CBnumType g) {
-    return (g >= 0) && (g <= CB_NT_freqDomain);
+static inline int CB_numTypeValid(CB_numType g) {
+    return (g >= 0) && (g <= CB_NT_FreqDomain);
 }
 
-//Error handle numbers
-typedef enum CB_errorCode { 
+
+enum { 
     CB_ERR_None = 0,
-    CB_ERR_InvalidDifficulty = 1,
+    CB_ERR_BuildFailed = 1,
     CB_ERR_InvalidGenre = 2,
     CB_ERR_InvalidNumType = 3,
-    CB_ERR_BuildFailed = 4
-} CB_errorCode;
+    CB_ERR_InvalidDifficulty = 4
+};
+//Error handle numbers
+typedef uint32_t CB_errorMask;
+enum { 
+    CB_EM_None                 = 0u,
+    CB_EM_BuildFailed          = 1u << 0,
+    CB_EM_InvalidGenre         = 1u << 1,
+    CB_EM_InvalidNumType       = 1u << 2,
+    CB_EM_InvalidDifficulty    = 1u << 3
+};
 
 //hide internal form users
 typedef struct CB_Ckt{
     CB_buildOps opts; //Build Options used
     unsigned nodeCount; //nodes in generated circuit
+    unsigned sourceCount; //sources in circuit
     unsigned componentCount; //How many components in the 
     int lastErrorCode; //Stores code if error occurs
+
+    CB_errorMask errorMask; //Enum to mask error Nums
+    int errorCount; //Count total Erros
+    int errorStack[CB_MAX_ERROR_STACK]; //Count error codes together
+
+    CB_WarnMask warnMask; //Warning structs
+    int warnCount;
+    int warnStack[CB_MAX_WARN_STACK];
 } CB_Ckt;
 
 
