@@ -1,11 +1,12 @@
 #pragma once
-
+#include <stdint.h>
+#include <stdio.h>
 //#include <stddef.h>
 //#include <stdint.h>
 
 
 #define CB_MAX_ERROR_STACK 8 
-#define CB_MAX_WARN_STACK  8
+#define CB_MAX_WARN_STACK  1
 
 typedef uint32_t CB_WarnMask;
 enum{
@@ -64,13 +65,7 @@ static inline int CB_numTypeValid(CB_numType g) {
 }
 
 
-enum { 
-    CB_ERR_None = 0,
-    CB_ERR_BuildFailed = 1,
-    CB_ERR_InvalidGenre = 2,
-    CB_ERR_InvalidNumType = 3,
-    CB_ERR_InvalidDifficulty = 4
-};
+
 //Error handle numbers
 typedef uint32_t CB_errorMask;
 enum { 
@@ -98,5 +93,7 @@ typedef struct CB_Ckt{
     int warnStack[CB_MAX_WARN_STACK];
 } CB_Ckt;
 
-
+//Main functions that utilize pointers
 int buildCkt(const CB_buildOps *opt, CB_Ckt *out);
+
+void CB_printErrors(const CB_Ckt *ckt, FILE *stream);

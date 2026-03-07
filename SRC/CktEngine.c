@@ -9,7 +9,16 @@
 #include "CktEngine.h"
 #include "cc_solver.h"
 
-
+static const char *error_to_text(int err) {
+   //Switch statement for readability
+   switch(err) {
+      case CB_EM_BuildFailed:         return "Build Failed";
+      case CB_EM_InvalidGenre:        return "Invalid Genre";
+      case CB_EM_InvalidNumType:      return "Invalid Number Type";
+      case CB_EM_InvalidDifficulty:   return "Invalid Difficulty";
+      default:                        return "Unknown Error";
+   }
+}
 //Function to mask error num based of input from CktEngine
 static CB_errorMask error_to_mask(int err) {
    //Switch statement for readability
@@ -22,6 +31,31 @@ static CB_errorMask error_to_mask(int err) {
    }
 }
 
+void CB_printErrors(const CB_Ckt *ckt, FILE *stream) {
+   int i;
+   int stored;
+   FILE *out;
+   //Check for null Circuit build 
+   if (ckt == NULL) return;
+   out = (stream != NULL) ? stream : stderr;
+   //No errors
+   if (ckt->errorCount <= 0) {
+      fprintf(out, "No errors.\n");
+      return;
+   }
+
+   //Main print formula
+   stored = ckt->errorCount;
+   if (stored > CB_MAX_ERROR_STACK) stored = CB_MAX_ERROR_STACK;
+
+   fprintf(out, "Build failed with %d errors:\n", ckt->errorCount);
+   for (i=0;i < stored; i++) {
+      int code = ckt->errorStack[i];
+      fprintf(out, " [%d] %s\n", code, error_to_text(code));
+   }
+
+   
+}
 //Push error function into actual output typedef 
 static void push_error(CB_Ckt *out, int err) {
    //base case for no errors
@@ -124,6 +158,10 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
    if (!CB_numTypeValid(out->opts.numType)) {
       push_error(out, CB_EM_InvalidNumType);
    }
+   //if errors, return and cut build cycle
+   if (out->errorCount > 0) {
+      return out->lastErrorCode;
+   }
 
    difficultyBase = base_nodes_for_difficulty(out->opts.difficulty);
    if (difficultyBase == 0u) { 
@@ -146,9 +184,10 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
    //Warning feature for numType
    warnCode = warn_NonTypical_combo(out->opts.genre, out->opts.numType);
    if (warnCode != CB_WARN_None) {
-      fprintf(stderr, "[Cicuit Engine Warning %d] Ac Sinusoidal with Real nums is valid but non-Typical", warnCode);
+      fprintf(stderr, "[Circuit Engine Warning %d] Ac Sinusoidal with Real nums is valid but non-Typical", warnCode);
    }
    //Maps node count to diff base
+   
    out->nodeCount = difficultyBase;
 
    //Keep values resolved fro future generation logic
@@ -161,6 +200,10 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
 
 /*MODIFY NEXT:
 1. DEAL WITH OUT->COMPONENT COUNT: Develop a ratio based system 
-that uses Difficulty level to confgure
-2. Make errors actaully stack and print at end of build function if
-Necessary  */
+that uses Difficulty level to confgure  
+2. Brainstorm more Warning codes for circuit build, Possibly impossible options
+resulting in a buildable but unsolveable circuit
+3. Start Developing a most basic matric builder: DC format both header and Source.
+4. Make a simpler cc_solver declaration and build function for solving basic DC SS
+5. Start developing a GUI for Circuit built. utilizing Cktengine and Matrix Build by
+Look into graphic construction in C*/
