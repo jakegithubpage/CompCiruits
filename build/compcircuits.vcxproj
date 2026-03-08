@@ -312,6 +312,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="C:\Users\jmccl\CompCircuits\SRC\cc_DcMatrix.c" />
     <ClCompile Include="C:\Users\jmccl\CompCircuits\SRC\cc_solver.c" />
     <ClCompile Include="C:\Users\jmccl\CompCircuits\SRC\main.c" />
     <ClCompile Include="C:\Users\jmccl\CompCircuits\SRC\BaseGUI.c" />

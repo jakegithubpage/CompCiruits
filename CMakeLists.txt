@@ -22,6 +22,7 @@ endif()
 
 #--Library(Engine)--
 add_library(compcircuits STATIC
+    SRC/cc_DcMatrix.c
     SRC/cc_solver.c
     SRC/main.c
     SRC/BaseGUI.c

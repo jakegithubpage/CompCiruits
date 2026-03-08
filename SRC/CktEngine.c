@@ -31,6 +31,19 @@ static CB_errorMask error_to_mask(int err) {
    }
 }
 
+static void ratio_for_difficulty(CB_difficulty d, unsigned *sourceCount, unsigned *componentCount) {
+   
+   switch(d) {
+      case CB_DIFF_Easy:      *sourceCount = 1u; *componentCount = 2u;  break;
+      case CB_DIFF_Medium:    *sourceCount = 1u; *componentCount = 4u;  break;
+      case CB_DIFF_Hard:      *sourceCount = 2u; *componentCount = 6u;  break;
+      case CB_DIFF_Extreme:   *sourceCount = 2u; *componentCount = 8u;  break;
+      case CB_DIFF_Einstein:  *sourceCount = 3u; *componentCount = 10u; break;
+      default:                *sourceCount = 0u; *componentCount = 0u;  break;
+   }
+   
+}
+
 void CB_printErrors(const CB_Ckt *ckt, FILE *stream) {
    int i;
    int stored;
@@ -56,6 +69,7 @@ void CB_printErrors(const CB_Ckt *ckt, FILE *stream) {
 
    
 }
+
 //Push error function into actual output typedef 
 static void push_error(CB_Ckt *out, int err) {
    //base case for no errors
@@ -75,7 +89,7 @@ static void push_error(CB_Ckt *out, int err) {
 
 
 //option switches for assigning bases of each build option
-static unsigned base_nodes_for_difficulty(CB_difficulty d) {
+static unsigned base_Unknodes_for_difficulty(CB_difficulty d) {
    switch (d) {
       case CB_DIFF_Easy:      return 1u;
       case CB_DIFF_Medium:    return 2u;
@@ -163,7 +177,7 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
       return out->lastErrorCode;
    }
 
-   difficultyBase = base_nodes_for_difficulty(out->opts.difficulty);
+   difficultyBase = base_Unknodes_for_difficulty(out->opts.difficulty);
    if (difficultyBase == 0u) { 
       out->lastErrorCode = CB_EM_InvalidDifficulty;
       return CB_EM_InvalidDifficulty;
@@ -184,13 +198,14 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
    //Warning feature for numType
    warnCode = warn_NonTypical_combo(out->opts.genre, out->opts.numType);
    if (warnCode != CB_WARN_None) {
-      fprintf(stderr, "[Circuit Engine Warning %d] Ac Sinusoidal with Real nums is valid but non-Typical", warnCode);
+      fprintf(stderr, "[Circuit Engine Warning %d] Ac Sinusoidal with Real nums is valid but non-Typical\n", warnCode);
    }
    //Maps node count to diff base
    
    out->nodeCount = difficultyBase;
+   ratio_for_difficulty(out->opts.difficulty, &out->sourceCount, &out->componentCount);
 
-   //Keep values resolved fro future generation logic
+   //Keep values resolved for future generation logic
    (void)genreBase;
    (void)numTypeBase;
 
