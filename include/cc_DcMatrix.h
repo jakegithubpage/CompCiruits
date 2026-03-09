@@ -1,9 +1,19 @@
+#pragma once
 #include "CktEngine.h"
+#include <stddef.h>
+
+#define CC_CKT_NODE_COUNT(c)        ((c)->nodeCount)
+#define CC_CKT_COMPONENT_COUNT(c)   ((c)->componentCount)
+#define CC_CKT_SOURCE_COUNT(c)      ((c)->sourceCount)
+#define CC_CKT_COMPONENT_AT(c,i)    ((c)->components[(i)])
+#define CC_CKT_SOURCE_AT(c,i)       ((c)->sources[(i)])
+
 
 typedef struct {
-    unsigned nodeCount;
-    unisgned componentCount; 
-    unisgned dim; /*Var for number of unknowns in circuit Ex: (Easy)-> 2 nodes 1 source 2 componenets, thus meaning 
+    unsigned totalNodeCount;
+    unsigned componentCount; 
+    unsigned sourceCount;
+    unsigned MatDimension; /*Var for number of unknowns in circuit Ex: (Easy)-> 2 nodes 1 source 2 componenets, thus meaning 
     (Nodes - 1 source) = 1 unknown AKA: SIZE OF LINEAR SYSTEM*/
     double *A;      //dim x dim = row major
     double *z;      //z length vector of dim
@@ -19,10 +29,12 @@ typedef struct {
 */
 
 //Build of Matrix
-int DC_Build_FromOut(const CB_ckt *out);
+int DC_Build_FromOut(const CB_Ckt *out);
 
 //access last build matrix
 const CC_DCMatrix* cc_dc_get_last(void);
 
 //Free or reset last matrix built
 void cc_dc_clear_last(void); 
+//store matrix data from Cb_Ckt
+int cc_dc_StoreStruct(const CB_Ckt *out, CC_DCMatrix *matrixDets);

@@ -1,12 +1,16 @@
 #pragma once
+
 #include <stdint.h>
 #include <stdio.h>
-//#include <stddef.h>
-//#include <stdint.h>
+#include <stddef.h>
+
 
 
 #define CB_MAX_ERROR_STACK 8 
 #define CB_MAX_WARN_STACK  1
+#define BE_MAX_DIFFICULTY  5
+#define CB_MAX_COMPONENTS 64
+#define CB_MAX_SOURCES    16
 
 typedef uint32_t CB_WarnMask;
 enum{
@@ -53,6 +57,25 @@ typedef struct CB_buildOps{
     CB_numType numType;
 } CB_buildOps;
 
+typedef enum {
+    CB_COMP_Resistor = 1
+} CB_ComponentType;
+
+typedef enum {
+    CB_SRC_VoltageDC = 1
+} CB_SourceType;
+
+typedef struct {
+    CB_SourceType type;
+    unsigned nPlus, nMinus;
+    double value;
+} CB_Source;
+
+typedef struct {
+    CB_ComponentType type;
+    unsigned n1, n2;
+    double value;
+} CB_Component;
 // Valid genre handler
 static inline int CB_diffValid(CB_difficulty g) {
     return (g >= 0) && (g <= CB_DIFF_Einstein);
@@ -91,9 +114,16 @@ typedef struct CB_Ckt{
     CB_WarnMask warnMask; //Warning structs
     int warnCount;
     int warnStack[CB_MAX_WARN_STACK];
+
+    CB_Component components[CB_MAX_COMPONENTS];
+    CB_Source    sources[CB_MAX_SOURCES];
 } CB_Ckt;
+
+
 
 //Main functions that utilize pointers
 int buildCkt(const CB_buildOps *opt, CB_Ckt *out);
 
+//Error print Dec
 void CB_printErrors(const CB_Ckt *ckt, FILE *stream);
+
