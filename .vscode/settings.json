@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "C:/Users/jmccl/CompCircuits/SRC"
+    "cmake.sourceDirectory": "/workspaces/CompCiruits",
+    "editor.inlineSuggest.enabled": false
 }
