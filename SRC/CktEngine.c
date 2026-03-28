@@ -7,6 +7,7 @@
 #include "main.h"
 #include "BaseGUI.h"
 #include "CktEngine.h"
+#include "cc_DcMatrix.h"
 #include "cc_solver.h"
 
 static const char *error_to_text(int err) {
@@ -214,11 +215,14 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
 }
 
 /*MODIFY NEXT:
-1. DEAL WITH OUT->COMPONENT COUNT: Develop a ratio based system 
+</1. DEAL WITH OUT->COMPONENT COUNT: Develop a ratio based system 
 that uses Difficulty level to confgure  
 2. Brainstorm more Warning codes for circuit build, Possibly impossible options
 resulting in a buildable but unsolveable circuit
-3. Start Developing a most basic matric builder: DC format both header and Source.
+</3. Start Developing a most basic matrix builder: DC format both header and Source. ENSURE THAT: matrix is being 
+built as simple as possible right now, 1 Source 2 Resistors solving for the only unKnown Node!
 4. Make a simpler cc_solver declaration and build function for solving basic DC SS
 5. Start developing a GUI for Circuit built. utilizing Cktengine and Matrix Build by
-Look into graphic construction in C*/
+Look into graphic construction in C
+6.Comment and detail DcMatrix Funcs for readability*/
+
