@@ -55,4 +55,71 @@ static const char* numtype_name(CB_numType n) {
    }
 }
 
+static void print_ckt_details(const CB_Ckt *ckt) {
+   unsigned i; 
+   printf("\n *CIRCUIT DETAILS* \n");
+   printf("Nodes: %u\n", ckt->nodeCount);
+   printf("Components: %u\n", ckt->componentCount);
+   printf("Sources: %u\n", ckt->sourceCount);
+
+
+   for (i = 0; i < ckt->componentCount; i++) {
+      const CB_Component *c = &ckt->components[i];
+      printf("Component [%u]: type=%d | n1=%u | n2=%u | value=%g\n",
+             i, (int)c->type, c->n1, c->n2, c->value);
+   }
+
+   for (i = 0; i < ckt->sourceCount; i++) {
+      const CB_Source *s = &ckt->sources[i];
+      printf("Source [%u]: type=%d | net Plus=%u | net Minus=%u | value=%g\n",
+             i, (int)s->type, s->nPlus, s->nMinus, s->value);
+   }
+}
+
+static void print_DcMat_details(void) {
+   const CC_DCMatrix *m = cc_dc_get_last();
+   if (m == NULL) {
+      printf("\n Matrix: Unavailable\n");
+      return;
+   }
+
+   printf("\n *MATRIX DETAILS* \n");
+   printf("total Nodes: %u\n", m->totalNodeCount);
+   printf("Component Count: %u\n", m->componentCount);
+   printf("Source Count: %u\n", m->sourceCount);
+   printf("MatDimension: %u\n", m->MatDimension);
+}
+
+
+int main(void) {
+   CB_buildOps opts;
+   CB_Ckt ckt;
+   int d, g, n;
+   int ok;
+
+   memset(&ckt, 0, sizeof(ckt));
+
+   printf("Select Difficulty -> (0=Easy, 1=Medium, 2=Hard, 3=Extreme, 4=Einstein): ");
+   if (scanf("%d", &d) != 1) return 1;
+
+   printf("Select number type -> (0=Real, 1=Complex, 2=Real/Complex, FreqDomain): ");
+   if (scanf("%d", &d) != 1) return 1;
+
+   printf("Select Genre -> (0=DC, 1=AC, 2=RL, 3=RC, 4=RLC, 5=OPAMP): ");
+   if (scanf("%d", &d) != 1) return 1;
+
+
+   opts.difficulty = (CB_difficulty)d;
+   opts.numType = (CB_numType)n;
+   opts.genre = (CB_Genre)g;
+
+   if (!CB_diffValid(opts.difficulty) ||
+       !CB_GenreValid(opts.genre) ||
+       !CB_numTypeValid(opts.numType)) {
+         printf("Invalid input values. \n");
+         return 1;
+   }
+
+   /*Finish main for build sequence and Function Checking*/
+}
 
