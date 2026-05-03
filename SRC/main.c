@@ -58,7 +58,7 @@ static const char* numtype_name(CB_numType n) {
 static void print_ckt_details(const CB_Ckt *ckt) {
    unsigned i; 
    printf("\n *CIRCUIT DETAILS* \n");
-   printf("Nodes: %u\n", ckt->nodeCount);
+   printf("Unknown Nodes: %u\n", ckt->nodeCount);
    printf("Components: %u\n", ckt->componentCount);
    printf("Sources: %u\n", ckt->sourceCount);
 
@@ -84,7 +84,7 @@ static void print_DcMat_details(void) {
    }
 
    printf("\n *MATRIX DETAILS* \n");
-   printf("total Nodes: %u\n", m->totalNodeCount);
+   printf("total Unknown Nodes: %u\n", m->totalNodeCount);
    printf("Component Count: %u\n", m->componentCount);
    printf("Source Count: %u\n", m->sourceCount);
    printf("MatDimension: %u\n", m->MatDimension);
@@ -122,29 +122,28 @@ int main(void) {
    
 
    printf("\nBuilding Circuit with: difficulty = %s, genre = %s, numType = %s\n",
-          diff_name(opts.difficulty), genre_name(opts.numType), numtype_name(opts.numType));
+          diff_name(opts.difficulty), genre_name(opts.genre), numtype_name(opts.numType));
 
    ok = buildCkt(&opts, &ckt);
-printf("[debug] buildCkt returned: %d\n", ok);
 
-/* buildCkt uses error-code style: 0 = success */
+
+//Error checking/Flow to confirm a successful matrix and detail build
 if (ok != CB_EM_None) {
     printf("build function failure.\n");
     CB_printErrors(&ckt, stdout);
     return 1;
 }
 
-printf("[debug] calling print_ckt_details\n");
+
 print_ckt_details(&ckt);
 
 ok = DC_Build_FromOut(&ckt);
-printf("[debug] DC_Build_FromOut returned: %d\n", ok);
+
 if (!ok) {
     printf("DC matrix build failed.\n");
     return 1;
 }
 
-printf("[debug] calling print_DcMat_details\n");
 print_DcMat_details();
 
 return 0;

@@ -206,22 +206,29 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
    out->nodeCount = difficultyBase;
    ratio_for_difficulty(out->opts.difficulty, &out->sourceCount, &out->componentCount);
 
-   
-
-   unsigned activeNodes = out->nodeCount - 1u; // non-ground nodes
+   if (difficultyBase == 1u) {
       for(unsigned i = 0; i < out->componentCount; i++) { 
+
          out->components[i].type = CB_COMP_Resistor;
-         out->components[i].n1 = 1u + (i % activeNodes); //Resistor terminal Pos at node 1
+         if(i == 0) {
+         //Node 1/2 node relative to each side of component
+         out->components[i].n1 = 1u; //Resistor terminal Pos at node 1
          out->components[i].n2 = 0u; //resistor terminal Neg at node 2 (GND)
-         out->components[i].value = 1000.0 + (double)(100u * i); //ohms
+         }
+         else if (i == 1) {
+         out->components[i].n1 = 1u; //Resistor terminal Pos at node 1
+         out->components[i].n2 = 1u; //resistor terminal Pos at node 2 
+         }
+         out->components[i].value = 1000.0; //ohms
       }
       for(unsigned i = 0; i < out->sourceCount; i++) { 
          out->sources[i].type = CB_SRC_VoltageDC;
-         out->sources[i].nPlus = 1u + (i % activeNodes); //Positive at n1
+         out->sources[i].nPlus = 1u; //Positive at n1
          out->sources[i].nMinus = 0u; //Neg at n2 (GND)
-         out->sources[i].value = 5.0 + (double)i; //Volts
+         out->sources[i].value = 5.0; //Volts
       }
-   
+   }
+      
 
 
    //Keep values resolved for future generation logic
@@ -239,8 +246,18 @@ that uses Difficulty level to confgure
 resulting in a buildable but unsolveable circuit
 </3. Start Developing a most basic matrix builder: DC format both header and Source. ENSURE THAT: matrix is being 
 built as simple as possible right now, 1 Source 2 Resistors solving for the only unKnown Node!
-4. Make a simpler cc_solver declaration and build function for solving basic DC SS
+4. Make a simple cc_solver declaration and build function for solving basic DC SS
 5. Start developing a GUI for Circuit built. utilizing Cktengine and Matrix Build by
 Look into graphic construction in C
-6.Comment and detail DcMatrix Funcs for readability*/
+</6.Comment and detail DcMatrix Funcs for readability
+7. Integrate basic random seeding into component and resistor values for better customization
+*/
 
+
+/*             ***FOR LATER CIRCUIT ORGANIZATION***,
+ YOU CAN SET N1 and N2 values accordingly to explain the formation
+and shape of the circuit example: comp 1: n1 = 1, n2 = 1 and comp 2: 
+n1 = 1, n2 = 0 - Tells that there is a basic voltage divider formation.
+*/
+
+/*/

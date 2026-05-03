@@ -10,7 +10,7 @@ static CC_DCMatrix latestDcMatrix = {0};
 
 //Build and store structure to matrix header build
 int cc_dc_StoreStruct(const CB_Ckt *out, CC_DCMatrix *matrixDets) {
-    matrixDets->totalNodeCount = ((out->nodeCount) + 1u);
+    matrixDets->totalNodeCount = (out->nodeCount);
     matrixDets->componentCount = out->componentCount;
     matrixDets->sourceCount = out->sourceCount;
     matrixDets->MatDimension = (out->nodeCount - 1u) + out->sourceCount;
@@ -65,7 +65,7 @@ static int add_to_A(int rowIndex, int columnIndex, double value) {
     unsigned dim = latestDcMatrix.MatDimension;
 
     if (!latestDcMatrix.A) return 0;
-    if (rowIndex < 0 || columnIndex < 0) return 0;
+    if (rowIndex < 0 || columnIndex < 0) return 1;
     if ((unsigned)rowIndex >= dim || (unsigned)columnIndex >= dim) return 0;
 
     latestDcMatrix.A[(size_t)rowIndex * dim + (size_t)columnIndex] += value;
@@ -94,15 +94,13 @@ static int stamp_Resistor(unsigned node1, unsigned node2, double resistanceOhms)
     g = 1.0 / resistanceOhms;
     n1 = node_to_voltage_index(node1);
     n2 = node_to_voltage_index(node2);
-
-    if (n1 >= 0 && !add_to_A(n1, n2, g)) return 0;
-    if (n2 >= 0 && !add_to_A(n1, n2, g)) return 0;
-
-    if (n1 >= 0 && n2 >= 0) { 
-        if (!add_to_A(n1, n2, -g)) return 0;
-        if (!add_to_A(n2, n1, -g)) return 0;
-    }
-
+    
+    
+    if (!add_to_A(n1, n1, +g)) return 0;
+    if (!add_to_A(n2, n2, +g)) return 0;
+    if (!add_to_A(n1, n2, -g)) return 0;
+    if (!add_to_A(n2, n1, -g)) return 0;
+    
     return 1;
 }
 /* Independent voltage Source (node Plus - Node Minus = volts), M.N.A stamping
@@ -150,29 +148,38 @@ int DC_Build_FromOut(const CB_Ckt *out)
     //fail if null entrys arrive
     if (out == NULL) return 0;
     if (out->nodeCount < 1u) return 0;
-
+   
     /* count voltage sources from out->sources*/
     for (sourceIndex = 0; sourceIndex < out->sourceCount; sourceIndex++) {
         if (out->sources[sourceIndex].type != CB_SRC_VoltageDC) return 0;
         if (out->sources[sourceIndex].value <= 0.0) return 0;
-        if (out->sources[sourceIndex].nPlus >= out->nodeCount) return 0;
-        if (out->sources[sourceIndex].nMinus >= out->nodeCount) return 0;
+        //NPlus/Minus will never be greater than 1 as 1/0 represents their True or flase values.
+        if (out->sources[sourceIndex].nPlus > 1) return 0; 
+        if (out->sources[sourceIndex].nMinus > 1) return 0; 
         voltageSourceCount++;
     }
+    
     //Return if bad allocation
     if (!dc_allocate(out->nodeCount, voltageSourceCount)) return 0;
+    
+    //Set latestDC specs for printing
+    latestDcMatrix.totalNodeCount = out->nodeCount;
+    latestDcMatrix.sourceCount = out->sourceCount;
+    latestDcMatrix.componentCount = out->componentCount;
 
     for (componentIndex = 0u; componentIndex < out->componentCount; componentIndex++) {
         const CB_Component *component = &out->components[componentIndex];
 
         if (out->components[componentIndex].type != CB_COMP_Resistor) return 0;
         if (out->components[componentIndex].value <= 0.0) return 0;
-        if (out->components[componentIndex].n1 >= out->nodeCount) return 0;
-        if (out->components[componentIndex].n2 >= out->nodeCount) return 0;
+        //NPlus/Minus will never be greater than 1 as 1/0 represents their True or flase values.
+        if (out->components[componentIndex].n1 > 1) return 0;
+        if (out->components[componentIndex].n2 > 1) return 0;
         //stamp resistors with conductance tracking
-        if (!stamp_Resistor(component->n1, component->n2, component->value)) return 0;
+        
+        if (!stamp_Resistor(out->components[componentIndex].n1, out->components[componentIndex].n2, out->components[componentIndex].value)) return 0;
     }
-
+    
     for (sourceIndex = 0u; sourceIndex < out->sourceCount; sourceIndex++) {
         const CB_Source *source = &out->sources[sourceIndex];
 

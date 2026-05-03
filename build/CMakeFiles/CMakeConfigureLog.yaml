@@ -82,7 +82,7 @@ events:
       The output was:
       0
       MSBuild version 18.3.0-release-26070-10+3972042b7 for .NET Framework
-      Build started 5/2/2026 10:06:16 PM.
+      Build started 5/3/2026 7:41:01 PM.
       
       Project "C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\4.3.0-rc1\\CompilerIdC\\CompilerIdC.vcxproj" on node 1 (default targets).
       PrepareForBuild:
@@ -111,7 +111,7 @@ events:
           0 Warning(s)
           0 Error(s)
       
-      Time Elapsed 00:00:00.44
+      Time Elapsed 00:00:00.43
       
       
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
@@ -925,8 +925,8 @@ events:
     checks:
       - "Detecting C compiler ABI info"
     directories:
-      source: "C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-si2r7s"
-      binary: "C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-si2r7s"
+      source: "C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-iptjme"
+      binary: "C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-iptjme"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS"
       CMAKE_C_FLAGS_DEBUG: "/Zi /Ob0 /Od /RTC1"
@@ -935,39 +935,39 @@ events:
       variable: "CMAKE_C_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-si2r7s'
+        Change Dir: 'C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-iptjme'
         
-        Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_620c9.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=18.0 /v:n
+        Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_22d77.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=18.0 /v:n
         MSBuild version 18.3.0-release-26070-10+3972042b7 for .NET Framework
-        Build started 5/2/2026 10:06:17 PM.
+        Build started 5/3/2026 7:41:02 PM.
         
-        Project "C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-si2r7s\\cmTC_620c9.vcxproj" on node 1 (default targets).
+        Project "C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-iptjme\\cmTC_22d77.vcxproj" on node 1 (default targets).
         PrepareForBuild:
           Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
-          Creating directory "C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-si2r7s\\Debug\\".
-          Creating directory "cmTC_620c9.dir\\Debug\\cmTC_620c9.tlog\\".
+          Creating directory "C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-iptjme\\Debug\\".
+          Creating directory "cmTC_22d77.dir\\Debug\\cmTC_22d77.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_620c9.dir\\Debug\\cmTC_620c9.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
-          Touching "cmTC_620c9.dir\\Debug\\cmTC_620c9.tlog\\unsuccessfulbuild".
+          Creating "cmTC_22d77.dir\\Debug\\cmTC_22d77.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_22d77.dir\\Debug\\cmTC_22d77.tlog\\unsuccessfulbuild".
         ClCompile:
-          C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.50.35717\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_620c9.dir\\Debug\\\\" /Fd"cmTC_620c9.dir\\Debug\\vc145.pdb" /external:W1 /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c"
+          C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.50.35717\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_22d77.dir\\Debug\\\\" /Fd"cmTC_22d77.dir\\Debug\\vc145.pdb" /external:W1 /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c"
           Microsoft (R) C/C++ Optimizing Compiler Version 19.50.35724 for x64
           Copyright (C) Microsoft Corporation.  All rights reserved.
-          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_620c9.dir\\Debug\\\\" /Fd"cmTC_620c9.dir\\Debug\\vc145.pdb" /external:W1 /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c"
+          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_22d77.dir\\Debug\\\\" /Fd"cmTC_22d77.dir\\Debug\\vc145.pdb" /external:W1 /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c"
           CMakeCCompilerABI.c
         Link:
-          C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.50.35717\\bin\\HostX64\\x64\\link.exe /OUT:"C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-si2r7s\\Debug\\cmTC_620c9.exe" /INCREMENTAL /ILK:"cmTC_620c9.dir\\Debug\\cmTC_620c9.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-si2r7s/Debug/cmTC_620c9.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-si2r7s/Debug/cmTC_620c9.lib" /MACHINE:X64  /machine:x64 cmTC_620c9.dir\\Debug\\CMakeCCompilerABI.obj
-          cmTC_620c9.vcxproj -> C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-si2r7s\\Debug\\cmTC_620c9.exe
+          C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.50.35717\\bin\\HostX64\\x64\\link.exe /OUT:"C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-iptjme\\Debug\\cmTC_22d77.exe" /INCREMENTAL /ILK:"cmTC_22d77.dir\\Debug\\cmTC_22d77.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-iptjme/Debug/cmTC_22d77.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-iptjme/Debug/cmTC_22d77.lib" /MACHINE:X64  /machine:x64 cmTC_22d77.dir\\Debug\\CMakeCCompilerABI.obj
+          cmTC_22d77.vcxproj -> C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-iptjme\\Debug\\cmTC_22d77.exe
         FinalizeBuildStatus:
-          Deleting file "cmTC_620c9.dir\\Debug\\cmTC_620c9.tlog\\unsuccessfulbuild".
-          Touching "cmTC_620c9.dir\\Debug\\cmTC_620c9.tlog\\cmTC_620c9.lastbuildstate".
-        Done Building Project "C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-si2r7s\\cmTC_620c9.vcxproj" (default targets).
+          Deleting file "cmTC_22d77.dir\\Debug\\cmTC_22d77.tlog\\unsuccessfulbuild".
+          Touching "cmTC_22d77.dir\\Debug\\cmTC_22d77.tlog\\cmTC_22d77.lastbuildstate".
+        Done Building Project "C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-iptjme\\cmTC_22d77.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:00.41
+        Time Elapsed 00:00:00.40
         
       exitCode: 0
   -
