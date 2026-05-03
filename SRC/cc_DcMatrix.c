@@ -76,7 +76,7 @@ static int add_to_z(int rowIndex, double value) {
     unsigned dim = latestDcMatrix.MatDimension;
 
     if (!latestDcMatrix.z) return 0;
-    if (rowIndex < 0) return 0;
+    if (rowIndex < 0) return 1;
     if ((unsigned)rowIndex >= dim) return 0;
 
     latestDcMatrix.z[(size_t)rowIndex] += value;
@@ -146,17 +146,10 @@ int DC_Build_FromOut(const CB_Ckt *out)
     unsigned voltageSourceStampIndex = 0u;
     unsigned voltageSourceCount = 0u;
    
-    //local pointers for components and sources
-    const CB_Component *component = &out->components[componentIndex];
-    const CB_Source *source = &out->sources[sourceIndex];
-
-
+    
     //fail if null entrys arrive
     if (out == NULL) return 0;
     if (out->nodeCount < 1u) return 0;
-
-    voltageSourceCount = 0u;
-    voltageSourceStampIndex = 0u;
 
     /* count voltage sources from out->sources*/
     for (sourceIndex = 0; sourceIndex < out->sourceCount; sourceIndex++) {
@@ -170,6 +163,8 @@ int DC_Build_FromOut(const CB_Ckt *out)
     if (!dc_allocate(out->nodeCount, voltageSourceCount)) return 0;
 
     for (componentIndex = 0u; componentIndex < out->componentCount; componentIndex++) {
+        const CB_Component *component = &out->components[componentIndex];
+
         if (out->components[componentIndex].type != CB_COMP_Resistor) return 0;
         if (out->components[componentIndex].value <= 0.0) return 0;
         if (out->components[componentIndex].n1 >= out->nodeCount) return 0;
@@ -179,7 +174,8 @@ int DC_Build_FromOut(const CB_Ckt *out)
     }
 
     for (sourceIndex = 0u; sourceIndex < out->sourceCount; sourceIndex++) {
-        
+        const CB_Source *source = &out->sources[sourceIndex];
+
         if (!stamp_VoltageSource(source->nPlus, source->nMinus, source->value, voltageSourceStampIndex)) return 0;
         voltageSourceStampIndex++;
     }
@@ -192,5 +188,5 @@ const CC_DCMatrix *cc_dc_get_last(void) {
 }
 
 void cc_dc_clear_last(void) {
-     memset(&latestDcMatrix, 0, sizeof(latestDcMatrix));
+     dc_free_latest();
 }

@@ -46,7 +46,7 @@ target_compile_definitions(compcircuits PRIVATE CC_VERSION=\"${PROJECT_VERSION}\
 
 #--CLI application--
 add_executable(compcircuits_cli
-    apps/compcircuits_cli.c
+    SRC/main.c
 )
 
 target_link_libraries(compcircuits_cli PRIVATE compcircuits)

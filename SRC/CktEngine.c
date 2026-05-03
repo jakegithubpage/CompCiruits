@@ -206,6 +206,24 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
    out->nodeCount = difficultyBase;
    ratio_for_difficulty(out->opts.difficulty, &out->sourceCount, &out->componentCount);
 
+   
+
+   unsigned activeNodes = out->nodeCount - 1u; // non-ground nodes
+      for(unsigned i = 0; i < out->componentCount; i++) { 
+         out->components[i].type = CB_COMP_Resistor;
+         out->components[i].n1 = 1u + (i % activeNodes); //Resistor terminal Pos at node 1
+         out->components[i].n2 = 0u; //resistor terminal Neg at node 2 (GND)
+         out->components[i].value = 1000.0 + (double)(100u * i); //ohms
+      }
+      for(unsigned i = 0; i < out->sourceCount; i++) { 
+         out->sources[i].type = CB_SRC_VoltageDC;
+         out->sources[i].nPlus = 1u + (i % activeNodes); //Positive at n1
+         out->sources[i].nMinus = 0u; //Neg at n2 (GND)
+         out->sources[i].value = 5.0 + (double)i; //Volts
+      }
+   
+
+
    //Keep values resolved for future generation logic
    (void)genreBase;
    (void)numTypeBase;

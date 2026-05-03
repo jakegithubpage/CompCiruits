@@ -103,10 +103,10 @@ int main(void) {
    if (scanf("%d", &d) != 1) return 1;
 
    printf("Select number type -> (0=Real, 1=Complex, 2=Real/Complex, FreqDomain): ");
-   if (scanf("%d", &d) != 1) return 1;
+   if (scanf("%d", &n) != 1) return 1;
 
    printf("Select Genre -> (0=DC, 1=AC, 2=RL, 3=RC, 4=RLC, 5=OPAMP): ");
-   if (scanf("%d", &d) != 1) return 1;
+   if (scanf("%d", &g) != 1) return 1;
 
 
    opts.difficulty = (CB_difficulty)d;
@@ -119,7 +119,34 @@ int main(void) {
          printf("Invalid input values. \n");
          return 1;
    }
+   
 
-   /*Finish main for build sequence and Function Checking*/
+   printf("\nBuilding Circuit with: difficulty = %s, genre = %s, numType = %s\n",
+          diff_name(opts.difficulty), genre_name(opts.numType), numtype_name(opts.numType));
+
+   ok = buildCkt(&opts, &ckt);
+printf("[debug] buildCkt returned: %d\n", ok);
+
+/* buildCkt uses error-code style: 0 = success */
+if (ok != CB_EM_None) {
+    printf("build function failure.\n");
+    CB_printErrors(&ckt, stdout);
+    return 1;
+}
+
+printf("[debug] calling print_ckt_details\n");
+print_ckt_details(&ckt);
+
+ok = DC_Build_FromOut(&ckt);
+printf("[debug] DC_Build_FromOut returned: %d\n", ok);
+if (!ok) {
+    printf("DC matrix build failed.\n");
+    return 1;
+}
+
+printf("[debug] calling print_DcMat_details\n");
+print_DcMat_details();
+
+return 0;
 }
 

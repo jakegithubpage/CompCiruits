@@ -368,7 +368,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C:\Users\jmccl\CompCircuits\apps\compcircuits_cli.c" />
+    <ClCompile Include="C:\Users\jmccl\CompCircuits\SRC\main.c" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
