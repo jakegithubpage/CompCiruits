@@ -86,7 +86,7 @@ events:
       The output was:
       0
       MSBuild version 18.3.0-release-26070-10+3972042b7 for .NET Framework
-      Build started 5/20/2026 12:53:50 AM.
+      Build started 5/20/2026 1:04:01 AM.
       
       Project "C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\4.3.0-rc1\\CompilerIdC\\CompilerIdC.vcxproj" on node 1 (default targets).
       PrepareForBuild:
@@ -2487,8 +2487,8 @@ events:
     checks:
       - "Detecting C compiler ABI info"
     directories:
-      source: "C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-dhnx1t"
-      binary: "C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-dhnx1t"
+      source: "C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-fhrhja"
+      binary: "C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-fhrhja"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS"
       CMAKE_C_FLAGS_DEBUG: "/Zi /Ob0 /Od /RTC1"
@@ -2501,39 +2501,39 @@ events:
       variable: "CMAKE_C_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-dhnx1t'
+        Change Dir: 'C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-fhrhja'
         
-        Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_99903.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=18.0 /v:n
+        Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_61725.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=18.0 /v:n
         MSBuild version 18.3.0-release-26070-10+3972042b7 for .NET Framework
-        Build started 5/20/2026 12:53:51 AM.
+        Build started 5/20/2026 1:04:02 AM.
         
-        Project "C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-dhnx1t\\cmTC_99903.vcxproj" on node 1 (default targets).
+        Project "C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-fhrhja\\cmTC_61725.vcxproj" on node 1 (default targets).
         PrepareForBuild:
           Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
-          Creating directory "C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-dhnx1t\\Debug\\".
-          Creating directory "cmTC_99903.dir\\Debug\\cmTC_99903.tlog\\".
+          Creating directory "C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-fhrhja\\Debug\\".
+          Creating directory "cmTC_61725.dir\\Debug\\cmTC_61725.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_99903.dir\\Debug\\cmTC_99903.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
-          Touching "cmTC_99903.dir\\Debug\\cmTC_99903.tlog\\unsuccessfulbuild".
+          Creating "cmTC_61725.dir\\Debug\\cmTC_61725.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_61725.dir\\Debug\\cmTC_61725.tlog\\unsuccessfulbuild".
         ClCompile:
-          C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.50.35717\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_99903.dir\\Debug\\\\" /Fd"cmTC_99903.dir\\Debug\\vc145.pdb" /external:W1 /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c"
+          C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.50.35717\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_61725.dir\\Debug\\\\" /Fd"cmTC_61725.dir\\Debug\\vc145.pdb" /external:W1 /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c"
           Microsoft (R) C/C++ Optimizing Compiler Version 19.50.35724 for x64
           Copyright (C) Microsoft Corporation.  All rights reserved.
-          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_99903.dir\\Debug\\\\" /Fd"cmTC_99903.dir\\Debug\\vc145.pdb" /external:W1 /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c"
+          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_61725.dir\\Debug\\\\" /Fd"cmTC_61725.dir\\Debug\\vc145.pdb" /external:W1 /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c"
           CMakeCCompilerABI.c
         Link:
-          C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.50.35717\\bin\\HostX64\\x64\\link.exe /OUT:"C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-dhnx1t\\Debug\\cmTC_99903.exe" /INCREMENTAL /ILK:"cmTC_99903.dir\\Debug\\cmTC_99903.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-dhnx1t/Debug/cmTC_99903.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-dhnx1t/Debug/cmTC_99903.lib" /MACHINE:X64  /machine:x64 cmTC_99903.dir\\Debug\\CMakeCCompilerABI.obj
-          cmTC_99903.vcxproj -> C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-dhnx1t\\Debug\\cmTC_99903.exe
+          C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.50.35717\\bin\\HostX64\\x64\\link.exe /OUT:"C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-fhrhja\\Debug\\cmTC_61725.exe" /INCREMENTAL /ILK:"cmTC_61725.dir\\Debug\\cmTC_61725.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-fhrhja/Debug/cmTC_61725.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"C:/Users/jmccl/CompCircuits/build/CMakeFiles/CMakeScratch/TryCompile-fhrhja/Debug/cmTC_61725.lib" /MACHINE:X64  /machine:x64 cmTC_61725.dir\\Debug\\CMakeCCompilerABI.obj
+          cmTC_61725.vcxproj -> C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-fhrhja\\Debug\\cmTC_61725.exe
         FinalizeBuildStatus:
-          Deleting file "cmTC_99903.dir\\Debug\\cmTC_99903.tlog\\unsuccessfulbuild".
-          Touching "cmTC_99903.dir\\Debug\\cmTC_99903.tlog\\cmTC_99903.lastbuildstate".
-        Done Building Project "C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-dhnx1t\\cmTC_99903.vcxproj" (default targets).
+          Deleting file "cmTC_61725.dir\\Debug\\cmTC_61725.tlog\\unsuccessfulbuild".
+          Touching "cmTC_61725.dir\\Debug\\cmTC_61725.tlog\\cmTC_61725.lastbuildstate".
+        Done Building Project "C:\\Users\\jmccl\\CompCircuits\\build\\CMakeFiles\\CMakeScratch\\TryCompile-fhrhja\\cmTC_61725.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:00.42
+        Time Elapsed 00:00:00.41
         
       exitCode: 0
   -
