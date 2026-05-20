@@ -1,4 +1,5 @@
 C:/Users/jmccl/CompCircuits/build/CMakeFiles/compcircuits.dir
 C:/Users/jmccl/CompCircuits/build/CMakeFiles/compcircuits_cli.dir
+C:/Users/jmccl/CompCircuits/build/CMakeFiles/compcircuits_gui.dir
 C:/Users/jmccl/CompCircuits/build/CMakeFiles/ALL_BUILD.dir
 C:/Users/jmccl/CompCircuits/build/CMakeFiles/ZERO_CHECK.dir

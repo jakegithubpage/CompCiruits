@@ -7,12 +7,6 @@
     <ClCompile Include="C:\Users\jmccl\CompCircuits\SRC\cc_solver.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\jmccl\CompCircuits\SRC\main.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\jmccl\CompCircuits\SRC\BaseGUI.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="C:\Users\jmccl\CompCircuits\SRC\CktEngine.c">
       <Filter>Source Files</Filter>
     </ClCompile>

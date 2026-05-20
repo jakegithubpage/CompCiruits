@@ -4,6 +4,7 @@ C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCCompilerABI.c
 C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCInformation.cmake
 C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCommonLanguageInclude.cmake
 C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCompilerIdDetection.cmake
+C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDependentOption.cmake
 C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake
 C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompiler.cmake
 C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake
@@ -74,6 +75,7 @@ C:/Program Files/CMake/share/cmake-4.3/Modules/Compiler/XL-C-DetermineCompiler.c
 C:/Program Files/CMake/share/cmake-4.3/Modules/Compiler/XLClang-C-DetermineCompiler.cmake
 C:/Program Files/CMake/share/cmake-4.3/Modules/Compiler/zOS-C-DetermineCompiler.cmake
 C:/Program Files/CMake/share/cmake-4.3/Modules/CompilerId/VS-10.vcxproj.in
+C:/Program Files/CMake/share/cmake-4.3/Modules/FeatureSummary.cmake
 C:/Program Files/CMake/share/cmake-4.3/Modules/Internal/CMakeCLinkerInformation.cmake
 C:/Program Files/CMake/share/cmake-4.3/Modules/Internal/CMakeCommonLinkerInformation.cmake
 C:/Program Files/CMake/share/cmake-4.3/Modules/Internal/CMakeDetermineLinkerId.cmake
@@ -92,3 +94,13 @@ C:/Users/jmccl/CompCircuits/CMakeLists.txt
 C:/Users/jmccl/CompCircuits/build/CMakeFiles/4.3.0-rc1/CMakeCCompiler.cmake
 C:/Users/jmccl/CompCircuits/build/CMakeFiles/4.3.0-rc1/CMakeRCCompiler.cmake
 C:/Users/jmccl/CompCircuits/build/CMakeFiles/4.3.0-rc1/CMakeSystem.cmake
+C:/Users/jmccl/CompCircuits/vcpkg/installed/x64-windows/share/sdl2/SDL2Config.cmake
+C:/Users/jmccl/CompCircuits/vcpkg/installed/x64-windows/share/sdl2/SDL2ConfigVersion.cmake
+C:/Users/jmccl/CompCircuits/vcpkg/installed/x64-windows/share/sdl2/SDL2Targets-debug.cmake
+C:/Users/jmccl/CompCircuits/vcpkg/installed/x64-windows/share/sdl2/SDL2Targets-release.cmake
+C:/Users/jmccl/CompCircuits/vcpkg/installed/x64-windows/share/sdl2/SDL2Targets.cmake
+C:/Users/jmccl/CompCircuits/vcpkg/installed/x64-windows/share/sdl2/SDL2mainTargets-debug.cmake
+C:/Users/jmccl/CompCircuits/vcpkg/installed/x64-windows/share/sdl2/SDL2mainTargets-release.cmake
+C:/Users/jmccl/CompCircuits/vcpkg/installed/x64-windows/share/sdl2/SDL2mainTargets.cmake
+C:/Users/jmccl/CompCircuits/vcpkg/installed/x64-windows/share/sdl2/sdlfind.cmake
+C:/Users/jmccl/CompCircuits/vcpkg/scripts/buildsystems/vcpkg.cmake

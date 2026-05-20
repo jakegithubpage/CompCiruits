@@ -11,6 +11,7 @@
 		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
 		<BuildDependency Project="compcircuits.vcxproj"/>
 		<BuildDependency Project="compcircuits_cli.vcxproj"/>
+		<BuildDependency Project="compcircuits_gui.vcxproj"/>
 		<Build Solution="Debug|*" Project="false"/>
 		<Build Solution="Release|*" Project="false"/>
 		<Build Solution="MinSizeRel|*" Project="false"/>
@@ -21,6 +22,10 @@
 		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
 	</Project>
 	<Project Path="compcircuits_cli.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="ae617815-e704-3b30-984c-e4b4f2239887">
+		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+		<BuildDependency Project="compcircuits.vcxproj"/>
+	</Project>
+	<Project Path="compcircuits_gui.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="f3530fbe-90c5-38b7-84bc-647be1578138">
 		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
 		<BuildDependency Project="compcircuits.vcxproj"/>
 	</Project>
