@@ -8,11 +8,6 @@
 #include "cc_DcMatrix.h"
 #include "CktEngine.h"
 
-/*
-volatile char GenreRate;
-volatile char numRate;
-volatile int diffRate;
-*/
 
 
 
