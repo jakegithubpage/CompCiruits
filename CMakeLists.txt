@@ -95,6 +95,5 @@ target_link_libraries(compcircuits_cli PRIVATE compcircuits)
 target_link_libraries(compcircuits_gui PRIVATE
     compcircuits
     SDL2::SDL2
-    SDL2::SDL2main
     ${CC_CAIRO_TARGET}
 )
