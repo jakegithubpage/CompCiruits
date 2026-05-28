@@ -11,13 +11,25 @@
 #include <stdio.h>
 
 
-static void cc_calculator(CB_Ckt *out) {
-unsigned summer;
-unsigned UnNode;
+static void cc_calculator(CB_Ckt *out, cc_solverUses *result) {
+memset(result, 0, sizeof(*result));
+
     //One unknown node/Two total - Difficulty base is 0
     if (out->nodeCount == 1u) {
-        for (unsigned i = 0; out->componentCount; ++i) {
-
+        for (unsigned i = 0; i < out->componentCount; i++) {
+            result->rh[i] = out->components[i].value;
+        }
+        for (unsigned i; i < out->sourceCount; i++) {
+            result->cn[i] = out->sources[i].value;
+        }
+        for (unsigned i; i < out->nodeCount; i++) {
+            result->summer = result->cn[i] * (result->rh[i] / result->rh[i] + result->rh[i + 1]);
         }
     }
+    if (out->nodeCount != 1u) {
+        return 0;
+    }
 }
+
+
+//Add solve questionare to main logic then impliment and test in main.c with build flow
