@@ -11,7 +11,7 @@
 #include <stdio.h>
 
 
-static void cc_calculator(CB_Ckt out*) {
+static void cc_calculator(CB_Ckt *out) {
 unsigned summer;
 unsigned UnNode;
     //One unknown node/Two total - Difficulty base is 0
@@ -21,4 +21,3 @@ unsigned UnNode;
         }
     }
 }
-//Come back to rethink better
