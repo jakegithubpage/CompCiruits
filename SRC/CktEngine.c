@@ -8,7 +8,7 @@
 #include "BaseGUI.h"
 #include "CktEngine.h"
 #include "cc_DcMatrix.h"
-#include "cc_solver.h"
+
 
 static const char *error_to_text(int err) {
    //Switch statement for readability
@@ -228,6 +228,20 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
          out->sources[i].value = 5.0; //Volts
       }
    }
+
+/* additional difficulty handlers to be added later
+   if (difficultyBase == 2u) { 
+
+   }
+
+   if (difficultyBase == 3u) { 
+      
+   }
+     
+   if (difficultyBase == 4u) { 
+      
+   }
+*/
       
 
 

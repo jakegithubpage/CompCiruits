@@ -1,10 +1,8 @@
-#include "cc_DcMatrix.h"
-#include "CktEngine.h"
-
 #include <stdlib.h>
 #include <string.h>
 
-
+#include "cc_DcMatrix.h"
+#include "CktEngine.h"
 
 static CC_DCMatrix latestDcMatrix = {0};
 

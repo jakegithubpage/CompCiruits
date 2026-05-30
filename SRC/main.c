@@ -7,7 +7,7 @@
 #include "main.h"
 #include "cc_DcMatrix.h"
 #include "CktEngine.h"
-
+#include "cc_solver.h"
 
 
 
@@ -86,10 +86,14 @@ static void print_DcMat_details(void) {
 }
 
 
+
+
 int main(void) {
    CB_buildOps opts;
    CB_Ckt ckt;
+   cc_solverUses result;
    int d, g, n;
+   char s[8] = {0};
    int ok;
 
    memset(&ckt, 0, sizeof(ckt));
@@ -141,6 +145,27 @@ if (!ok) {
 
 print_DcMat_details();
 
+printf("Would you like the circuits solved details? - Type \"Yes\" or \"No\"\n");
+
+if (scanf(" %7s", s) != 1) return 1;
+
+   if (_stricmp(s, "Yes") == 0){
+      cc_calculator(&ckt, &result);
+      
+      if ((ckt.nodeCount == 1u)) {
+         printf("2 total nodes in your build\n");
+         for (unsigned i = 0; i < ckt.nodeCount; i++) {
+            if (result.summer[i] == 0) break;
+               printf("Unknown Node %u = %.2f Volts\n", i, result.summer[i]);
+         }
+      }
+   }
+   else if (_stricmp(s, "No") == 0) {
+      printf("Build Flow complete.\n");
+   }
+   else {
+      printf("Invalid response.\n");
+   }
 return 0;
 }
 
