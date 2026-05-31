@@ -21,21 +21,46 @@ memset(result, 0, sizeof(*result));
         return;
     }
 
+    unsigned rCount = (out->componentCount < resistorHoldMax) ? out->componentCount : resistorHoldMax;
+    unsigned sCount = (out->sourceCount < nodeHoldMax) ? out->sourceCount : nodeHoldMax;
+
     //One unknown node/Two total - Difficulty base is 0
     if (out->nodeCount == 1u) {
-        for (unsigned i = 0; i < out->componentCount; i++) {
-            result->rh[i] = (int)out->components[i].value;
+        for (unsigned i = 0; i < rCount; i++) {
+            result->rh[i] = out->components[i].value;
         }
-        for (unsigned i = 0; i < out->sourceCount; i++) {
-            result->cn[i] = (int)out->sources[i].value;
+        for (unsigned i = 0; i < sCount; i++) {
+            result->cn[i] = out->sources[i].value;
         }
-        for (unsigned i = 0; i < MAX_LOADER; i++) {
-            if ((i == (MAX_LOADER - 1)) || (result->rh[i] == 0)) {
+        for (unsigned i = 0; i < sumHoldMax && i + 1 < rCount && i < sCount; i++) {
+            if (result->rh[i] == 0) {
                 break;
             }
-            (double)result->summer[i] = (int)result->cn[i] * (result->rh[i] / ((double)result->rh[i] + (double)result->rh[i + 1]));
+            double den = result->rh[i] + result->rh[i + 1];
+            if (den == 0.0) break;
+            result->summer[i] = result->cn[i] * (result->rh[i] / den);
         }
     }
+        if (out->nodeCount == 2u) { 
+            for (unsigned i = 0; i < rCount; i++) {
+            result->rh[i] = out->components[i].value;
+            }
+            for (unsigned i = 0; i < sCount; i++) {
+            result->cn[i] = (int)out->sources[i].value;
+            }
+                if (rCount >= 4u && sCount >= 1u) { 
+                    double den = ((1 / result->rh[2]) + (1 / (result->rh[0] + result->rh[1])) + (1 / result->rh[3]));
+        
+                    if (den != 0.0) { 
+                        result->summer[0] = (result->cn[0] / result->rh[3]) / den;
+                        double den2 = result->rh[0] + result->rh[1];
+
+                        if (den2 != 0.0) {
+                                result->summer[1] = result->summer[0] * (result->rh[0] / den2);
+                        }
+                    }
+                }
+        }
 }
 
 

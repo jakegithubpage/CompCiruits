@@ -1,13 +1,12 @@
-//Libraries
+
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <stdlib.h>
+#include <time.h>
 
-//Headers
-#include "main.h"
-#include "BaseGUI.h"
 #include "CktEngine.h"
-#include "cc_DcMatrix.h"
+
 
 
 static const char *error_to_text(int err) {
@@ -132,6 +131,19 @@ static int warn_NonTypical_combo(CB_Genre genre, CB_numType numType) {
    return CB_WARN_None;
 }
 
+static void seed_rng_once(void) {
+   static int seeded = 0;
+   if (!seeded) {
+      srand((unsigned)time(NULL));
+      seeded = 1;
+   }
+}
+
+static double rand_range_double(double min, double max) {
+   double t = (double)rand() / (double)RAND_MAX;
+   return min + t * (max - min);
+}
+
 /* Difficulty: sets outputs to solve for and how many nodes will be in the circuit
    Genre: Sets: what type of circuit problem will be generated. Ex: Signals/Systems, RLC, RL, RC, Source/Resistors, Opamps, etc
    Number type: Sets if Number/Sources are Exponential, Rational, Complex*/
@@ -148,6 +160,8 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
    //Configure generation settings by setting memory 
    memset(out, 0, sizeof(*out));
    out->lastErrorCode = CB_EM_None;
+
+   seed_rng_once();
 
    //Failure of build options return NULL Err code
    if (opt == NULL) {
@@ -212,28 +226,41 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
          out->components[i].type = CB_COMP_Resistor;
          if(i == 0) {
          //Node 1/2 node relative to each side of component
-         out->components[i].n1 = 1u; //Resistor terminal Pos at node 1
-         out->components[i].n2 = 0u; //resistor terminal Neg at node 2 (GND)
+         out->components[i].n1 = 0u; //Resistor terminal Pos at node 1
+         out->components[i].n2 = 1u; //resistor terminal Neg at node 2 (GND)
          }
          else if (i == 1) {
          out->components[i].n1 = 1u; //Resistor terminal Pos at node 1
-         out->components[i].n2 = 1u; //resistor terminal Pos at node 2 
+         out->components[i].n2 = 2u; //resistor terminal Pos at node 2 
          }
-         out->components[i].value = 1000.0; //ohms
+         out->components[i].value = rand_range_double(100.0, 10000.0); //ohms
       }
       for(unsigned i = 0; i < out->sourceCount; i++) { 
          out->sources[i].type = CB_SRC_VoltageDC;
          out->sources[i].nPlus = 1u; //Positive at n1
          out->sources[i].nMinus = 0u; //Neg at n2 (GND)
-         out->sources[i].value = 5.0; //Volts
+         out->sources[i].value = rand_range_double(1.0, 50.0); //Volts
       }
    }
-
-/* additional difficulty handlers to be added later
    if (difficultyBase == 2u) { 
+      for(unsigned i = 0; i < out->componentCount; i++) {
 
+         for (unsigned i = 0; i < out->componentCount; i++) {
+            out->components[i].type  = CB_COMP_Resistor;
+            out->components[i].n1    = (i % 3u);          // example placement
+            out->components[i].n2    = ((i + 1u) % 3u);   // example placement
+            out->components[i].value = rand_range_double(100.0, 10000.0);
+         }  
+         
+      }
+      for(unsigned i = 0; i < out->sourceCount; i++) {
+         out->sources[i].type = CB_SRC_VoltageDC;
+         out->sources[i].nPlus = 1u;
+         out->sources[i].nMinus = 0u;
+         out->sources[i].value = rand_range_double(1.0, 50.0);
+      }
    }
-
+/* additional difficulty handlers to be added later
    if (difficultyBase == 3u) { 
       
    }
@@ -252,4 +279,10 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
    out->lastErrorCode = CB_EM_None;
    return CB_EM_None;
 }
+/*Once difficulties are able to be handled, start adding in 
+feature to make each difficulty have different circuit
+architeture - and make randomized components count for each difficulty
 
+After thought, for example, different difficulties can have a range of 
+component count - it was that a easy diffciulty circuit can have more than 2
+components - it can have 3, 4, 5 even*/

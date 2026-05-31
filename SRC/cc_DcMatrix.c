@@ -11,7 +11,7 @@ int cc_dc_StoreStruct(const CB_Ckt *out, CC_DCMatrix *matrixDets) {
     matrixDets->totalNodeCount = (out->nodeCount);
     matrixDets->componentCount = out->componentCount;
     matrixDets->sourceCount = out->sourceCount;
-    matrixDets->MatDimension = (out->nodeCount - 1u) + out->sourceCount;
+    matrixDets->MatDimension = out->nodeCount + out->sourceCount;
     return 1;
 }
 
@@ -36,7 +36,7 @@ static int dc_allocate(unsigned nodeCount, unsigned sourceCount) {
 
     dc_free_latest();
 
-    dim = (size_t)((nodeCount - 1u) + sourceCount);
+    dim = (size_t)(nodeCount + sourceCount);
 
     if (dim == 0u) return 0;
 
@@ -111,7 +111,7 @@ static int stamp_VoltageSource(unsigned nPlus, unsigned nMinus, double volts, un
 
     if (latestDcMatrix.totalNodeCount < 1u) return 0;
 
-    unknownVoltages = latestDcMatrix.totalNodeCount - 1u;
+    unknownVoltages = latestDcMatrix.totalNodeCount;
     k = (int)(unknownVoltages + sourceLocalIndex);
 
     vp = node_to_voltage_index(nPlus);
@@ -146,17 +146,21 @@ int DC_Build_FromOut(const CB_Ckt *out)
     //fail if null entrys arrive
     if (out == NULL) return 0;
     if (out->nodeCount < 1u) return 0;
-   
+   printf("cp1");
     /* count voltage sources from out->sources*/
     for (sourceIndex = 0; sourceIndex < out->sourceCount; sourceIndex++) {
+           printf("src[%u] type=%d expected=%d value=%f\n",
+           sourceIndex,
+           (int)out->sources[sourceIndex].type,
+           (int)CB_SRC_VoltageDC,
+           out->sources[sourceIndex].value);
         if (out->sources[sourceIndex].type != CB_SRC_VoltageDC) return 0;
         if (out->sources[sourceIndex].value <= 0.0) return 0;
         //NPlus/Minus will never be greater than 1 as 1/0 represents their True or flase values.
-        if (out->sources[sourceIndex].nPlus > 1) return 0; 
-        if (out->sources[sourceIndex].nMinus > 1) return 0; 
+
         voltageSourceCount++;
     }
-    
+    printf("cp2");
     //Return if bad allocation
     if (!dc_allocate(out->nodeCount, voltageSourceCount)) return 0;
     
@@ -164,27 +168,24 @@ int DC_Build_FromOut(const CB_Ckt *out)
     latestDcMatrix.totalNodeCount = out->nodeCount;
     latestDcMatrix.sourceCount = out->sourceCount;
     latestDcMatrix.componentCount = out->componentCount;
-
+    printf("cp3");
     for (componentIndex = 0u; componentIndex < out->componentCount; componentIndex++) {
         const CB_Component *component = &out->components[componentIndex];
 
         if (out->components[componentIndex].type != CB_COMP_Resistor) return 0;
         if (out->components[componentIndex].value <= 0.0) return 0;
-        //NPlus/Minus will never be greater than 1 as 1/0 represents their True or flase values.
-        if (out->components[componentIndex].n1 > 1) return 0;
-        if (out->components[componentIndex].n2 > 1) return 0;
-        //stamp resistors with conductance tracking
+        
         
         if (!stamp_Resistor(out->components[componentIndex].n1, out->components[componentIndex].n2, out->components[componentIndex].value)) return 0;
     }
-    
+    printf("cp4");
     for (sourceIndex = 0u; sourceIndex < out->sourceCount; sourceIndex++) {
         const CB_Source *source = &out->sources[sourceIndex];
 
         if (!stamp_VoltageSource(source->nPlus, source->nMinus, source->value, voltageSourceStampIndex)) return 0;
         voltageSourceStampIndex++;
     }
-
+    printf("cp5");
     return 1;
 }
 
