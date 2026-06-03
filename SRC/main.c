@@ -8,6 +8,7 @@
 #include "cc_DcMatrix.h"
 #include "CktEngine.h"
 #include "cc_solver.h"
+#include "BaseGUI.h"
 
 
 
@@ -144,6 +145,8 @@ if (!ok) {
 }
 
 print_DcMat_details();
+//Launch diagram of circuit
+BaseGUI_Run(ckt.nodeCount);
 
 printf("Would you like the circuits solved details? - Type \"Yes\" or \"No\"\n");
 

@@ -4,6 +4,9 @@
     <ClCompile Include="C:\Users\jmccl\CompCircuits\SRC\main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\jmccl\CompCircuits\SRC\BaseGUI.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\jmccl\CompCircuits\CMakeLists.txt" />

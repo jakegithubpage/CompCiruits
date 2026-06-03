@@ -182,10 +182,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{AE617815-E704-3B30-984C-E4B4F2239887}</Project>
       <Name>compcircuits_cli</Name>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\jmccl\CompCircuits\build\compcircuits_gui.vcxproj">
-      <Project>{F3530FBE-90C5-38B7-84BC-647BE1578138}</Project>
-      <Name>compcircuits_gui</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

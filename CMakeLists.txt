@@ -87,13 +87,17 @@ target_compile_definitions(compcircuits PRIVATE CC_VERSION=\"${PROJECT_VERSION}\
 #--CLI application--
 add_executable(compcircuits_cli
     SRC/main.c
-)
-add_executable(compcircuits_gui
     SRC/BaseGUI.c
 )
-target_link_libraries(compcircuits_cli PRIVATE compcircuits)
-target_link_libraries(compcircuits_gui PRIVATE
+#add_executable(compcircuits_gui 
+#    SRC/cc_solver.c
+#)
+
+target_link_libraries(compcircuits_cli PRIVATE 
     compcircuits
     SDL2::SDL2
     ${CC_CAIRO_TARGET}
 )
+#target_link_libraries(compcircuits_gui PRIVATE
+#    compcircuits
+#)
