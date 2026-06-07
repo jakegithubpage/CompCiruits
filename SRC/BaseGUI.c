@@ -16,7 +16,7 @@ int BaseGUI_Run(unsigned nodeCount) {
     CB_Ckt ckt;
     SDL_SetMainReady();
     if (SDL_Init(SDL_INIT_VIDEO) != 0) return 1;
-        printf("cp1");
+       
     //Build window - Check for invalid build
     SDL_Window* win = SDL_CreateWindow(
         "Circuit Pop-up GUI",
@@ -24,21 +24,21 @@ int BaseGUI_Run(unsigned nodeCount) {
         1000, 750, SDL_WINDOW_SHOWN
     );
     if (!win) return 1; 
-        printf("cp1");
+        
     rateSelect = (int)nodeCount;
     //Render - check if rendered properly
     SDL_Renderer* ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
     if (!ren) return 1;
-        printf("cp1");
+       
     //Dimensions for window initialization and creating process
     const int W = 1000, H = 750;
     cairo_surface_t* surf = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, W, H);
     cairo_t* cr = cairo_create(surf);
-        printf("cp1");
+        
     //BackGround - white
     cairo_set_source_rgb(cr, 1, 1, 1);
     cairo_paint(cr);
-    printf("cp1");
+    
     if (rateSelect == 1u) {
         // "Wire" - schematic
         cairo_set_source_rgb(cr, 0.1, 0.1, 0.1);

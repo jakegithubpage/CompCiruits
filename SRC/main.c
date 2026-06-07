@@ -1,7 +1,9 @@
 //Libraries
 #include <stdio.h>
 #include <string.h>
-
+#include <process.h>
+#include <stdlib.h>
+#include <windows.h>
 
 //Headers
 #include "main.h"
@@ -9,6 +11,8 @@
 #include "CktEngine.h"
 #include "cc_solver.h"
 #include "BaseGUI.h"
+
+
 
 
 
@@ -86,6 +90,12 @@ static void print_DcMat_details(void) {
    printf("MatDimension: %u\n", m->MatDimension);
 }
 
+static unsigned _stdcall gui_thread_proc(void *p) {
+   unsigned nodeCount = *(unsigned *)p;
+   free(p);
+   BaseGUI_Run(nodeCount);
+   return 0;
+}
 
 
 
@@ -145,8 +155,14 @@ if (!ok) {
 }
 
 print_DcMat_details();
-//Launch diagram of circuit
-BaseGUI_Run(ckt.nodeCount);
+//Launch diagram of circuit - Launch in thread process
+unsigned *arg = (unsigned *)malloc(sizeof(*arg));
+if (arg) {
+   *arg = ckt.nodeCount;
+   uintptr_t th = _beginthreadex(NULL, 0, gui_thread_proc, arg, 0, NULL);
+   if (th) CloseHandle((HANDLE)th); //detach thread
+}
+
 
 printf("Would you like the circuits solved details? - Type \"Yes\" or \"No\"\n");
 

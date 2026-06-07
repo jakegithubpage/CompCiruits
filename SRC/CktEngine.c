@@ -219,15 +219,15 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
    
    out->nodeCount = difficultyBase;
    ratio_for_difficulty(out->opts.difficulty, &out->sourceCount, &out->componentCount);
-
+   //Difficulty base one - Easy setting
    if (difficultyBase == 1u) {
       for(unsigned i = 0; i < out->componentCount; i++) { 
 
          out->components[i].type = CB_COMP_Resistor;
          if(i == 0) {
          //Node 1/2 node relative to each side of component
-         out->components[i].n1 = 0u; //Resistor terminal Pos at node 1
-         out->components[i].n2 = 1u; //resistor terminal Neg at node 2 (GND)
+         out->components[i].n1 = 2u; //Resistor terminal Pos at node 1
+         out->components[i].n2 = 0u; //resistor terminal Neg at node 2 (GND)
          }
          else if (i == 1) {
          out->components[i].n1 = 1u; //Resistor terminal Pos at node 1
@@ -242,14 +242,34 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
          out->sources[i].value = rand_range_double(1.0, 50.0); //Volts
       }
    }
+   //Difficulty base Two - Medium setting
    if (difficultyBase == 2u) { 
       for(unsigned i = 0; i < out->componentCount; i++) {
 
          for (unsigned i = 0; i < out->componentCount; i++) {
             out->components[i].type  = CB_COMP_Resistor;
-            out->components[i].n1    = (i % 3u);          // example placement
-            out->components[i].n2    = ((i + 1u) % 3u);   // example placement
             out->components[i].value = rand_range_double(100.0, 10000.0);
+            if ((i % 2) == 0) {
+               if (i < 2) {
+                  out->components[i].n1 = (i + 1u);   // example placement
+                  out->components[i].n2 = (i + 2u);   // example placement
+               }
+               else {
+                  out->components[i].n1 = ((i - 1u) + 1u);   // example placement
+                  out->components[i].n2 = ((i - 1u) + 2u);   // example placement
+               }
+
+            }
+            if ((i % 2) == 1) {
+               if (i < 3) {
+                  out->components[i].n1 = (i + 1u);   // example placement
+                  out->components[i].n2 = (i - 1u);   // example placement
+               }
+               else {
+                  out->components[i].n1 = i;         // example placement
+                  out->components[i].n2 = (i - i);   // example placement
+               }
+            }
          }  
          
       }
@@ -260,11 +280,17 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
          out->sources[i].value = rand_range_double(1.0, 50.0);
       }
    }
-/* additional difficulty handlers to be added later
+//Difficulty base three - Hard setting
    if (difficultyBase == 3u) { 
-      
+      for (unsigned i = 0; i < out->componentCount; i++) {
+
+         //for (unsigned i = 0; i < )
+      }
+      for (unsigned i = 0; i < out->sourceCount; i++) {
+
+      }
    }
-     
+/* additional difficulty handlers to be added later
    if (difficultyBase == 4u) { 
       
    }
@@ -279,7 +305,12 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
    out->lastErrorCode = CB_EM_None;
    return CB_EM_None;
 }
-/*Once difficulties are able to be handled, start adding in 
+
+
+
+/*
+                     ****IMPORTANT****
+Once difficulties are able to be handled, start adding in 
 feature to make each difficulty have different circuit
 architeture - and make randomized components count for each difficulty
 

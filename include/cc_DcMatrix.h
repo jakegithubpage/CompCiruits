@@ -1,14 +1,9 @@
 #pragma once
-#include "CktEngine.h"
+#include <stdint.h>
+#include <stdio.h>
 #include <stddef.h>
 
-#define CC_CKT_NODE_COUNT(c)        ((c)->nodeCount)
-#define CC_CKT_COMPONENT_COUNT(c)   ((c)->componentCount)
-#define CC_CKT_SOURCE_COUNT(c)      ((c)->sourceCount)
-#define CC_CKT_COMPONENT_AT(c,i)    ((c)->components[(i)])
-#define CC_CKT_SOURCE_AT(c,i)       ((c)->sources[(i)])
-
-
+typedef struct CB_Ckt CB_Ckt;
 typedef struct {
     unsigned totalNodeCount;
     unsigned componentCount; 
