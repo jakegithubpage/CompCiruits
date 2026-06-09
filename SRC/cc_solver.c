@@ -63,5 +63,5 @@ memset(result, 0, sizeof(*result));
         }
 }
 
-
+//**NEXT ADD HARD DIFICULTY SOLVE LOGIC**
 //Add solve questionare to main logic then impliment and test in main.c with build flow

@@ -245,8 +245,6 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
    //Difficulty base Two - Medium setting
    if (difficultyBase == 2u) { 
       for(unsigned i = 0; i < out->componentCount; i++) {
-
-         for (unsigned i = 0; i < out->componentCount; i++) {
             out->components[i].type  = CB_COMP_Resistor;
             out->components[i].value = rand_range_double(100.0, 10000.0);
             if ((i % 2) == 0) {
@@ -255,8 +253,8 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
                   out->components[i].n2 = (i + 2u);   // example placement
                }
                else {
-                  out->components[i].n1 = ((i - 1u) + 1u);   // example placement
-                  out->components[i].n2 = ((i - 1u) + 2u);   // example placement
+                  out->components[i].n1 = (i);   // example placement
+                  out->components[i].n2 = (i + 1u);   // example placement
                }
 
             }
@@ -269,9 +267,7 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
                   out->components[i].n1 = i;         // example placement
                   out->components[i].n2 = (i - i);   // example placement
                }
-            }
-         }  
-         
+            }  
       }
       for(unsigned i = 0; i < out->sourceCount; i++) {
          out->sources[i].type = CB_SRC_VoltageDC;
@@ -283,11 +279,47 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
 //Difficulty base three - Hard setting
    if (difficultyBase == 3u) { 
       for (unsigned i = 0; i < out->componentCount; i++) {
-
-         //for (unsigned i = 0; i < )
+         out->components[i].type = CB_COMP_Resistor;
+         out->components[i].value = rand_range_double(100.0, 10000.0);
+         if ((i % 2) == 0) {
+            if (i == 2) {
+               out->components[i].n1 = (i);
+               out->components[i].n2 = (i + 1u);
+            }
+            else if (i == 4) {
+               out->components[i].n1 = (i);
+               out->components[i].n2 = (i + 1u);
+            }
+            else {
+               out->components[i].n1 = (i + 1u);
+               out->components[i].n2 = (i + 2u);
+            }
+         }
+         if ((i % 2) == 1) {
+            if (i == 3) {
+               out->components[i].n1 = (i);
+               out->components[i].n2 = (i + 2u);
+            }
+            else if (i == 5) {
+               out->components[i].n1 = (i - 3u);
+               out->components[i].n2 = (i - 1u);
+            }
+            else {
+               out->components[i].n1 = (i + 1u);
+               out->components[i].n2 = (i - 1u);
+            }
+         }
       }
       for (unsigned i = 0; i < out->sourceCount; i++) {
-
+         out->sources[i].type = CB_SRC_VoltageDC;
+         out->sources[i].value = rand_range_double(1.0, 50.0);
+         if ((i % 2) == 0) { 
+            out->sources[i].nPlus = (i + 1u);
+         }
+         else if ((i % 2) == 1) {
+            out->sources[i].nPlus = (i + 2u);
+         }
+         out->sources[i].nMinus = 0u;
       }
    }
 /* additional difficulty handlers to be added later
