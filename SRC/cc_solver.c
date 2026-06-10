@@ -41,13 +41,17 @@ memset(result, 0, sizeof(*result));
             result->summer[i] = result->cn[i] * (result->rh[i] / den);
         }
     }
-        if (out->nodeCount == 2u) { 
+    else if (out->nodeCount == 2u) { 
             for (unsigned i = 0; i < rCount; i++) {
             result->rh[i] = out->components[i].value;
             }
             for (unsigned i = 0; i < sCount; i++) {
             result->cn[i] = (int)out->sources[i].value;
             }
+                /*
+                Coding in if statement that depends on C and S count, 
+                This will be helpful when difficulty component count can range
+                */
                 if (rCount >= 4u && sCount >= 1u) { 
                     double den = ((1 / result->rh[2]) + (1 / (result->rh[0] + result->rh[1])) + (1 / result->rh[3]));
         
@@ -60,7 +64,42 @@ memset(result, 0, sizeof(*result));
                         }
                     }
                 }
+    }
+    else if (out->nodeCount == 3u) {
+        for (unsigned i = 0; i < rCount; i++) {
+            result->rh[i] = out->components[i].value;
         }
+        for (unsigned i = 0; i < sCount; i++) {
+            result->cn[i] = out->sources[i].value;
+        }
+            if (rCount >= 6 && sCount >= 2) {
+                double v2num = (result->cn[0] / result->rh[0]) + (result->cn[1] * ((1 / result->rh[2]) + (1 / (result->rh[5] + result->rh[4] + result->rh[3]))));
+                double v2den = ((1 / result->rh[0]) + (1 / result->rh[1]) + (1 / result->rh[2]) + (1 / (result->rh[5] + result->rh[4] + result->rh[3])));
+                double v2 = v2num / v2den;
+
+                if (v2 != 0.0) {
+                    result->summer[0] = v2num / v2den;
+                    double v4num = ((v2 / result->rh[5]) + (result->cn[1] / (result->rh[4] + result->rh[3])));
+                    double v4den = ((1 / result->rh[5]) + (1 / (result->rh[4] + result->rh[3])));
+                    double v4 = v4num / v4den;
+
+                    if (v4 != 0.0) {
+                        result->summer[1] = v4num / v4den;
+                        double v5num = (v4 / result->rh[4]) + (result->cn[1] / result->rh[3]);
+                        double v5den = ((1 / result->rh[4]) + (1 / result->rh[3]));
+                        double v5 = v5num / v5den;
+
+                        if (v5 != 0.0) { 
+                            result->summer[2] = v5num / v5den;
+                        }
+                    }
+                }
+            }
+    }
+    else {
+        return;
+    }
+
 }
 
 //**NEXT ADD HARD DIFICULTY SOLVE LOGIC**
