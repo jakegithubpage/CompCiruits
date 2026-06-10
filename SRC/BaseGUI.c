@@ -31,7 +31,7 @@ int BaseGUI_Run(unsigned nodeCount) {
     if (!ren) return 1;
        
     //Dimensions for window initialization and creating process
-    const int W = 1000, H = 750;
+    const int W = 1200, H = 1000;
     cairo_surface_t* surf = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, W, H);
     cairo_t* cr = cairo_create(surf);
         
@@ -225,9 +225,183 @@ int BaseGUI_Run(unsigned nodeCount) {
         
        
     }
-    /*else if (rateSelect == 3u) {
+    else if (rateSelect == 3u) {
+        // "Wire" - schematic
+        cairo_set_source_rgb(cr, 0.1, 0.1, 0.1);
+        cairo_set_line_width(cr, 3.0);
+        cairo_move_to(cr, 300, 400);
+        cairo_line_to(cr, 400, 400);
+        cairo_stroke(cr);
 
-    }*/
+        // "Resistor Zig-Zag" - schematic
+        cairo_move_to(cr, 400, 400);
+        cairo_line_to(cr, 410, 385);
+        cairo_line_to(cr, 430, 415);
+        cairo_line_to(cr, 450, 385);
+        cairo_line_to(cr, 470, 415);
+        cairo_line_to(cr, 480, 400);
+        cairo_stroke(cr);
+
+        // "Wire" - schematic
+        cairo_move_to(cr, 480, 400);
+        cairo_line_to(cr, 580, 400);
+        cairo_stroke(cr);
+
+        // "Wire" - schematic
+        cairo_move_to(cr, 580, 400);
+        cairo_line_to(cr, 580, 500);
+        cairo_stroke(cr);
+
+        // "Resistor zig zag" 
+        cairo_move_to(cr, 580, 500);
+        cairo_line_to(cr, 595, 510);
+        cairo_line_to(cr, 565, 530);
+        cairo_line_to(cr, 595, 550);
+        cairo_line_to(cr, 565, 570);
+        cairo_line_to(cr, 580, 580);
+        cairo_stroke(cr);
+
+        // Wire - below 2nd Resistor
+        cairo_move_to(cr, 580, 580);
+        cairo_line_to(cr, 580, 680);
+        cairo_stroke(cr);
+
+        //GND Point - bottom of Voltage divider
+        cairo_move_to(cr, 580, 680);
+        cairo_line_to(cr, 300, 680);
+        cairo_stroke(cr);
+
+        //WIRE up to voltage Source
+        cairo_move_to(cr, 300, 680);
+        cairo_line_to(cr, 300, 580);
+        cairo_stroke(cr);
+
+        //Source symbol one
+        cairo_arc(cr, 300.0, 540.0, 40.0, 0.0, 6.283185307179586); // 2*pi
+        cairo_stroke(cr);
+
+        //Plus Minus signs
+        cairo_move_to(cr, 310, 520);
+        cairo_line_to(cr, 290, 520);
+        cairo_move_to(cr, 300, 510);
+        cairo_line_to(cr, 300, 530);
+        cairo_move_to(cr, 310, 560);
+        cairo_line_to(cr, 290, 560);
+        cairo_stroke(cr);
+
+        //Wire above Voltage source
+        cairo_move_to(cr, 300, 500);
+        cairo_line_to(cr, 300, 400);
+        cairo_stroke(cr);
+
+        //Start of second Mesh loop 
+        cairo_move_to(cr, 580, 400);
+        cairo_line_to(cr, 680, 400);
+        cairo_stroke(cr);
+
+        //Second mesh top resistor 
+        cairo_move_to(cr, 680, 400);
+        cairo_line_to(cr, 690, 385);
+        cairo_line_to(cr, 710, 415);
+        cairo_line_to(cr, 730, 385);
+        cairo_line_to(cr, 750, 415);
+        cairo_line_to(cr, 760, 400);
+        cairo_stroke(cr);
+
+        //Second Mesh top right wire
+        cairo_move_to(cr, 760, 400);
+        cairo_line_to(cr, 860, 400);
+        cairo_stroke(cr);
+
+        //Second Mesh outside wall
+        cairo_move_to(cr, 860, 400);
+        cairo_line_to(cr, 860, 500);
+        cairo_stroke(cr);
+
+        //Source symbol two - "outter second mesh"
+        cairo_arc(cr, 860.0, 540.0, 40.0, 0.0, 6.283185307179586); // 2*pi
+        cairo_stroke(cr);
+
+        //Plus/Minus signs two
+        cairo_move_to(cr, 870, 520);
+        cairo_line_to(cr, 850, 520);
+        cairo_move_to(cr, 860, 510);
+        cairo_line_to(cr, 860, 530);
+        cairo_move_to(cr, 870, 560);
+        cairo_line_to(cr, 850, 560);
+        cairo_stroke(cr);
+        
+        //Bottom wire - Second mesh outter branch
+        cairo_move_to(cr, 860, 580);
+        cairo_line_to(cr, 860, 680);
+        cairo_stroke(cr);
+
+        //GND rail Wire - Second Mesh
+        cairo_move_to(cr, 860, 680);
+        cairo_line_to(cr, 580, 680);
+        cairo_stroke(cr);
+
+        //Start of Top mesh
+        cairo_move_to(cr, 580, 400);
+        cairo_line_to(cr, 580, 300);
+        cairo_stroke(cr);
+
+        //First left wall Resistor
+        cairo_move_to(cr, 580, 300);
+        cairo_line_to(cr, 565, 290);
+        cairo_line_to(cr, 595, 270);
+        cairo_line_to(cr, 565, 250);
+        cairo_line_to(cr, 595, 230);
+        cairo_line_to(cr, 580, 220);
+        cairo_stroke(cr);
+        
+        //Left wall top wire
+        cairo_move_to(cr, 580, 220);
+        cairo_line_to(cr, 580, 120);
+        cairo_stroke(cr);
+
+        //Top wall Left wire
+        cairo_move_to(cr, 580, 120);
+        cairo_line_to(cr, 680, 120);
+        cairo_stroke(cr);
+
+        //Top resistor top mesh
+        cairo_move_to(cr, 680, 120);
+        cairo_line_to(cr, 690, 105);
+        cairo_line_to(cr, 710, 135);
+        cairo_line_to(cr, 730, 105);
+        cairo_line_to(cr, 750, 135);
+        cairo_line_to(cr, 760, 120);
+        cairo_stroke(cr);
+
+        //Top mesh Top right wire
+        cairo_move_to(cr, 760, 120);
+        cairo_line_to(cr, 860, 120);
+        cairo_stroke(cr);
+
+        //Top Mesh Right wall top wire
+        cairo_move_to(cr, 860, 120);
+        cairo_line_to(cr, 860, 220);
+        cairo_stroke(cr);
+
+        //Top Mesh right wall resistor
+        cairo_move_to(cr, 860, 220);
+        cairo_line_to(cr, 875, 230);
+        cairo_line_to(cr, 845, 250);
+        cairo_line_to(cr, 875, 270);
+        cairo_line_to(cr, 845, 290);
+        cairo_line_to(cr, 860, 300);
+        cairo_stroke(cr);
+
+        //Top mesh right wall bottom wire
+        cairo_move_to(cr, 860, 300);
+        cairo_line_to(cr, 860, 400);
+        cairo_stroke(cr);
+
+    }
+    else {
+        return 0;
+    }
     SDL_Texture* tex = SDL_CreateTexture(
         ren, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, W, H
     );

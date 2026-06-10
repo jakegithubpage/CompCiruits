@@ -8,7 +8,7 @@ static CC_DCMatrix latestDcMatrix = {0};
 
 //Build and store structure to matrix header build
 int cc_dc_StoreStruct(const CB_Ckt *out, CC_DCMatrix *matrixDets) {
-    matrixDets->totalNodeCount = (out->nodeCount);
+    matrixDets->totalNodeCount = out->nodeCount;
     matrixDets->componentCount = out->componentCount;
     matrixDets->sourceCount = out->sourceCount;
     matrixDets->MatDimension = out->nodeCount + out->sourceCount;
