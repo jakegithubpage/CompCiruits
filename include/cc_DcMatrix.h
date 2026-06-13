@@ -2,17 +2,19 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stddef.h>
+#include <complex.h>
 
 typedef struct CB_Ckt CB_Ckt;
+typedef double CC_Num;
 typedef struct {
     unsigned totalNodeCount;
     unsigned componentCount; 
     unsigned sourceCount;
     unsigned MatDimension; /*Var for number of unknowns in circuit Ex: (Easy)-> 2 nodes 1 source 2 componenets, thus meaning 
     (Nodes - 1 source) = 1 unknown AKA: SIZE OF LINEAR SYSTEM*/
-    double *A;      //dim x dim = row major
-    double *z;      //z length vector of dim
-    double *x;      //x length vector of dim
+    CC_Num *A;      //dim x dim = row major
+    CC_Num *z;      //z length vector of dim
+    CC_Num *x;      //x length vector of dim
 } CC_DCMatrix;
 
 
@@ -25,6 +27,8 @@ typedef struct {
 
 //Build of Matrix
 int DC_Build_FromOut(const CB_Ckt *out);
+
+int DC_Build_FromOut_Complex(const CB_Ckt *out, double omega);
 
 //access last build matrix
 const CC_DCMatrix* cc_dc_get_last(void);

@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
-
+#include <complex.h>
 
 
 
@@ -58,23 +58,28 @@ typedef struct CB_buildOps{
 } CB_buildOps;
 
 typedef enum {
-    CB_COMP_Resistor = 1
+    CB_COMP_Resistor = 1,
+    CB_COMP_CAP = 2,
+    CB_COMP_INDUC = 3,
 } CB_ComponentType;
 
 typedef enum {
-    CB_SRC_VoltageDC = 1
+    CB_SRC_VoltageACDC = 1,
+    CB_SRC_CurrentACDC = 2,
 } CB_SourceType;
 
 typedef struct {
     CB_SourceType type;
     unsigned nPlus, nMinus;
     double value;
+    double imag;
 } CB_Source;
 
 typedef struct {
     CB_ComponentType type;
     unsigned n1, n2;
     double value;
+    double imag;
 } CB_Component;
 // Valid genre handler
 static inline int CB_diffValid(CB_difficulty g) {

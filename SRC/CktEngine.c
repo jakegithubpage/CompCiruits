@@ -4,7 +4,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <time.h>
-
+#include <math.h>
 
 #include "CktEngine.h"
 
@@ -145,6 +145,12 @@ static double rand_range_double(double min, double max) {
    return min + t * (max - min);
 }
 
+static int rand_range_int(int min, int max) {
+   if (max <= min) return min;
+   return min + (rand() % (max - min + 1));
+}
+
+
 /* Difficulty: sets outputs to solve for and how many nodes will be in the circuit
    Genre: Sets: what type of circuit problem will be generated. Ex: Signals/Systems, RLC, RL, RC, Source/Resistors, Opamps, etc
    Number type: Sets if Number/Sources are Exponential, Rational, Complex*/
@@ -234,10 +240,24 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
          out->components[i].n1 = 1u; //Resistor terminal Pos at node 1
          out->components[i].n2 = 2u; //resistor terminal Pos at node 2 
          }
-         out->components[i].value = rand_range_double(100.0, 10000.0); //ohms
+         if (numTypeBase == CB_NT_Real) {
+         out->components[i].value = rand_range_double(100.0, 10000.0);
+         }
+         else if (numTypeBase == CB_NT_RealComplex) {
+            unsigned coinFlip = rand_range_int(0,100);
+            if (coinFlip > 50.0) {
+               out->components[i].value = rand_range_double(100.0, 10000.0);
+               out->components[i].imag = rand_range_double(-5000.0, 5000.0);
+            }
+            else {
+               out->components[i].value = rand_range_double(100.0, 10000.0);
+               out->components[i].imag = 0;
+            }
+
+         } //ohms
       }
       for(unsigned i = 0; i < out->sourceCount; i++) { 
-         out->sources[i].type = CB_SRC_VoltageDC;
+         out->sources[i].type = CB_SRC_VoltageACDC;
          out->sources[i].nPlus = 1u; //Positive at n1
          out->sources[i].nMinus = 0u; //Neg at n2 (GND)
          out->sources[i].value = rand_range_double(1.0, 50.0); //Volts
@@ -271,7 +291,7 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
             }  
       }
       for(unsigned i = 0; i < out->sourceCount; i++) {
-         out->sources[i].type = CB_SRC_VoltageDC;
+         out->sources[i].type = CB_SRC_VoltageACDC;
          out->sources[i].nPlus = 1u;
          out->sources[i].nMinus = 0u;
          out->sources[i].value = rand_range_double(1.0, 50.0);
@@ -312,7 +332,7 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
          }
       }
       for (unsigned i = 0; i < out->sourceCount; i++) {
-         out->sources[i].type = CB_SRC_VoltageDC;
+         out->sources[i].type = CB_SRC_VoltageACDC;
          out->sources[i].value = rand_range_double(1.0, 50.0);
          if ((i % 2) == 0) { 
             out->sources[i].nPlus = (i + 1u);

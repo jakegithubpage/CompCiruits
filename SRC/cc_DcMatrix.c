@@ -1,17 +1,29 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "cc_DcMatrix.h"
 #include "CktEngine.h"
 
 static CC_DCMatrix latestDcMatrix = {0};
 
+
+
 //Build and store structure to matrix header build
 int cc_dc_StoreStruct(const CB_Ckt *out, CC_DCMatrix *matrixDets) {
+   
+    if (!out || !matrixDets) return 0;
+    if (out->nodeCount < 1u) return 0;
+
+    
+
     matrixDets->totalNodeCount = out->nodeCount;
     matrixDets->componentCount = out->componentCount;
     matrixDets->sourceCount = out->sourceCount;
     matrixDets->MatDimension = out->nodeCount + out->sourceCount;
+    matrixDets->A = NULL;
+    matrixDets->z = NULL;
+    matrixDets->x = NULL;
     return 1;
 }
 
@@ -31,13 +43,14 @@ static int node_to_voltage_index(unsigned nodeID) {
 static int dc_allocate(unsigned nodeCount, unsigned sourceCount) {
     size_t dim;
     size_t elems;
+    
 
     if (nodeCount < 1u) return 0;
 
     dc_free_latest();
 
+    
     dim = (size_t)(nodeCount + sourceCount);
-
     if (dim == 0u) return 0;
 
     elems = dim * dim;
@@ -63,8 +76,8 @@ static int add_to_A(int rowIndex, int columnIndex, double value) {
     unsigned dim = latestDcMatrix.MatDimension;
 
     if (!latestDcMatrix.A) return 0;
-    if (rowIndex < 0 || columnIndex < 0) return 1;
-    if ((unsigned)rowIndex >= dim || (unsigned)columnIndex >= dim) return 0;
+    if (rowIndex <= 0 || columnIndex <= 0) return 1;
+    //if ((unsigned)rowIndex >= dim || (unsigned)columnIndex >= dim) return 0;
 
     latestDcMatrix.A[(size_t)rowIndex * dim + (size_t)columnIndex] += value;
     return 1;
@@ -89,7 +102,7 @@ static int stamp_Resistor(unsigned node1, unsigned node2, double resistanceOhms)
 
     if (resistanceOhms <= 0.0) return 0;
 
-    g = 1.0 / resistanceOhms;
+    g = (1.0 / resistanceOhms);
     n1 = node_to_voltage_index(node1);
     n2 = node_to_voltage_index(node2);
     
@@ -111,7 +124,7 @@ static int stamp_VoltageSource(unsigned nPlus, unsigned nMinus, double volts, un
 
     if (latestDcMatrix.totalNodeCount < 1u) return 0;
 
-    unknownVoltages = latestDcMatrix.totalNodeCount;
+    unknownVoltages = latestDcMatrix.totalNodeCount - 1u;
     k = (int)(unknownVoltages + sourceLocalIndex);
 
     vp = node_to_voltage_index(nPlus);
@@ -146,47 +159,52 @@ int DC_Build_FromOut(const CB_Ckt *out)
     //fail if null entrys arrive
     if (out == NULL) return 0;
     if (out->nodeCount < 1u) return 0;
-   
+    
     /* count voltage sources from out->sources*/
     for (sourceIndex = 0; sourceIndex < out->sourceCount; sourceIndex++) {
            printf("src[%u] type=%d expected=%d value=%f\n",
            sourceIndex,
            (int)out->sources[sourceIndex].type,
-           (int)CB_SRC_VoltageDC,
+           (int)CB_SRC_VoltageACDC,
            out->sources[sourceIndex].value);
-        if (out->sources[sourceIndex].type != CB_SRC_VoltageDC) return 0;
+        if (out->sources[sourceIndex].type != CB_SRC_VoltageACDC) return 0;
         if (out->sources[sourceIndex].value <= 0.0) return 0;
+        
         //NPlus/Minus will never be greater than 1 as 1/0 represents their True or flase values.
 
         voltageSourceCount++;
     }
-   
+    
     //Return if bad allocation
     if (!dc_allocate(out->nodeCount, voltageSourceCount)) return 0;
     
     //Set latestDC specs for printing
     latestDcMatrix.totalNodeCount = out->nodeCount;
-    latestDcMatrix.sourceCount = out->sourceCount;
+    latestDcMatrix.sourceCount = voltageSourceCount;
     latestDcMatrix.componentCount = out->componentCount;
     
     for (componentIndex = 0u; componentIndex < out->componentCount; componentIndex++) {
-        const CB_Component *component = &out->components[componentIndex];
+        //const CB_Component *component = &out->components[componentIndex];
 
         if (out->components[componentIndex].type != CB_COMP_Resistor) return 0;
         if (out->components[componentIndex].value <= 0.0) return 0;
-        
         
         if (!stamp_Resistor(out->components[componentIndex].n1, out->components[componentIndex].n2, out->components[componentIndex].value)) return 0;
     }
     
     for (sourceIndex = 0u; sourceIndex < out->sourceCount; sourceIndex++) {
         const CB_Source *source = &out->sources[sourceIndex];
-
+        
         if (!stamp_VoltageSource(source->nPlus, source->nMinus, source->value, voltageSourceStampIndex)) return 0;
         voltageSourceStampIndex++;
     }
     
     return 1;
+}
+
+int DC_Build_FromOut_Complex(const CB_Ckt *out, double omega) {
+    (void)omega;
+    return DC_Build_FromOut(out);
 }
 
 const CC_DCMatrix *cc_dc_get_last(void) {

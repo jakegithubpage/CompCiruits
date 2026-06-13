@@ -4,7 +4,7 @@
 #include <process.h>
 #include <stdlib.h>
 #include <windows.h>
-
+#include <math.h>
 //Headers
 #include "main.h"
 #include "cc_DcMatrix.h"
@@ -64,9 +64,22 @@ static void print_ckt_details(const CB_Ckt *ckt) {
 
 
    for (i = 0; i < ckt->componentCount; i++) {
+
       const CB_Component *c = &ckt->components[i];
-      printf("Component [%u]: type=%d | n1=%u | n2=%u | value=%g\n",
+
+      double re = c->value;
+      double im = c->imag;
+      if (fabs(c->imag) < 1e-12) {
+         printf("Component [%u]: type=%d | n1=%u | n2=%u | value=%g\n",
              i, (int)c->type, c->n1, c->n2, c->value);
+      }
+      else {
+         double rel = sqrt((re * re) + (im * im));
+         double ima = atan(im / re) * (180.0 / 3.14159265358979323);
+         printf("Component [%u]: type=%d | n1=%u | n2=%u | rect=%g  %+g  | polar=%g < %+gj\n",
+             i, (int)c->type, c->n1, c->n2, c->value, c->imag, rel, ima);
+            
+      }
    }
 
    for (i = 0; i < ckt->sourceCount; i++) {
@@ -112,7 +125,7 @@ int main(void) {
    printf("Select Difficulty -> (0=Easy, 1=Medium, 2=Hard, 3=Extreme, 4=Einstein): ");
    if (scanf("%d", &d) != 1) return 1;
 
-   printf("Select number type -> (0=Real, 1=Complex, 2=Real/Complex, FreqDomain): ");
+   printf("Select number type -> (0=Real, 1=Real/Complex, 2=Complex, 3=FreqDomain): ");
    if (scanf("%d", &n) != 1) return 1;
 
    printf("Select Genre -> (0=DC, 1=AC, 2=RL, 3=RC, 4=RLC, 5=OPAMP): ");
