@@ -20,7 +20,10 @@ enum{
 //Warning code implementation
 enum {
     CB_WARN_None = 0,
-    CB_WARN_AcRealNonTypical = 1001
+    CB_WARN_Ac_Real = 1000,
+    CB_WARN_AcDc_Real = 1001,
+    CB_WARN_DC_COMP = 1010
+
 };
 
 //pub types - Difficulty
@@ -35,8 +38,8 @@ typedef enum CB_difficulty{
 //pub types - name genre types
 typedef enum CB_Genre{
     CB_G_dcSteady = 0,
-    CB_G_AcSinusoidal = 1,
-    CB_G_RL = 2,
+    CB_G_AcDcSinusoidal = 1,
+    CB_G_AcSinusoidal = 2,
     CB_G_RC = 3,
     CB_G_RLC = 4,
     CB_G_OPAMP = 5
@@ -66,12 +69,14 @@ typedef struct CB_buildOps{
 typedef enum {
     CB_COMP_Resistor = 1,
     CB_COMP_CAP = 2,
-    CB_COMP_INDUC = 3,
+    CB_COMP_INDUC = 3
 } CB_ComponentType;
 
 typedef enum {
-    CB_SRC_VoltageACDC = 1,
-    CB_SRC_CurrentACDC = 2,
+    CB_SRC_VoltageDC = 1,
+    CB_SRC_CurrentDC = 2,
+    CB_SRC_VoltageAC = 3,
+    CB_SRC_CurrentAC = 4
 } CB_SourceType;
 
 typedef struct {

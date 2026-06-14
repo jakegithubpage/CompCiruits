@@ -105,8 +105,8 @@ static unsigned base_for_genre(CB_Genre g)
 {
    switch (g) {
       case CB_G_dcSteady:     return 1u;
-      case CB_G_AcSinusoidal: return 2u;
-      case CB_G_RL:           return 3u;
+      case CB_G_AcDcSinusoidal: return 2u;
+      case CB_G_AcSinusoidal: return 3u;
       case CB_G_RC:           return 4u;
       case CB_G_RLC:          return 5u;
       case CB_G_OPAMP:        return 6u;
@@ -136,7 +136,13 @@ static SwitchNumType to_switch_numType(CB_numType n) {
 //Non-Fatal Num conflict handle
 static int warn_NonTypical_combo(CB_Genre genre, CB_numType numType) {
    if (genre == CB_G_AcSinusoidal && numType == CB_NT_Real) {
-      return CB_WARN_AcRealNonTypical;
+      return CB_WARN_Ac_Real;
+   }
+   if (genre == CB_G_AcDcSinusoidal && numType == CB_NT_Real) {
+      return CB_WARN_AcDc_Real;
+   }
+   if (genre == CB_G_dcSteady && (numType == CB_NT_RealComplex || numType == CB_NT_Complex)) {
+      return CB_WARN_DC_COMP;
    }
    return CB_WARN_None;
 }
@@ -163,6 +169,7 @@ static void assign_numType_value(CB_Component *c, SwitchNumType numTypeSw) {
    c->value = rand_range_double(100.0, 10000.0);
    c->imag = 0.0;
 
+   if (c->type == 1u) return;
    switch (numTypeSw) {
       case SWITCH_REAL:
          c->imag = 0.0;
@@ -179,6 +186,97 @@ static void assign_numType_value(CB_Component *c, SwitchNumType numTypeSw) {
 
       break;
       default:
+      break;
+   }
+}
+
+static int coinFlip(void) {
+   return rand_range_int(0,1);
+}
+static int coinFlip3(void) {
+   return rand_range_int(0,2);
+}
+static void assign_genreBase_Source(CB_Genre genre, CB_Source *s) {
+   switch(genre) {
+      case CB_G_dcSteady: 
+         
+         if (coinFlip()) {
+            s->type = CB_SRC_VoltageDC;
+            s->value = rand_range_double(1.0, 50.0);
+            s->imag = 0.0;
+         }
+         else {
+             s->type = CB_SRC_CurrentDC;
+             s->value = rand_range_double(1.0, 50.0);
+             s->imag = 0.0;
+         }
+      break;
+      case CB_G_AcDcSinusoidal:
+         if (coinFlip()) {
+            if (coinFlip()) {
+               s->type = CB_SRC_VoltageAC;
+               s->value = rand_range_double(1.0, 50.0);
+               s->imag = rand_range_double(-500.0, 500.0);
+            }
+            else {
+               s->type = CB_SRC_CurrentAC;
+               s->value = rand_range_double(1.0, 50.0);
+               s->imag = rand_range_double(-500.0, 500.0);
+            }
+         }
+         else {
+            if (coinFlip()) {
+               s->type = CB_SRC_VoltageDC;
+               s->value = rand_range_double(1.0, 50.0);
+               s->imag = 0.0;
+            }
+            else {
+               s->type = CB_SRC_CurrentDC;
+               s->value = rand_range_double(1.0, 50.0);
+               s->imag = 0.0;
+            }
+         }
+      break;
+      case CB_G_AcSinusoidal:
+         if (coinFlip()) {
+            s->type = CB_SRC_VoltageAC;
+            s->value = rand_range_double(1.0, 50.0);
+            s->imag = rand_range_double(-500.0, 500.0);
+         }
+         else {
+            s->type = CB_SRC_CurrentAC;
+            s->value = rand_range_double(1.0, 50.0);
+            s->imag = rand_range_double(-500.0, 500.0);
+         }
+      break;
+   }
+}
+
+static void assign_genreBase_Component(CB_Genre genre, CB_Component *c) {
+   
+   switch(genre) {
+      case CB_G_dcSteady:
+         c->type = CB_COMP_Resistor;
+      break;
+      case CB_G_AcDcSinusoidal:
+         unsigned coin = (unsigned)coinFlip3();
+         if (coin == 2) {
+            c->type = CB_COMP_CAP;
+         }
+         else if(coin == 1) {
+            c->type = CB_COMP_INDUC;
+         }
+         else {
+            c->type = CB_COMP_Resistor;
+         }
+      break;
+      case CB_G_AcSinusoidal:
+         if (coinFlip()) {
+            c->type = CB_COMP_CAP;
+         }
+         else {
+            c->type = CB_COMP_INDUC;
+         }
       break;
    }
 }
@@ -267,7 +365,8 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
       
       for(unsigned i = 0; i < out->componentCount; i++) { 
 
-         out->components[i].type = CB_COMP_Resistor;
+
+         assign_genreBase_Component(out->opts.genre, &out->components[i]);
          if(i == 0) {
          //Node 1/2 node relative to each side of component
          out->components[i].n1 = 2u; //Resistor terminal Pos at node 1
@@ -282,18 +381,17 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
          } //ohms
       }
       for(unsigned i = 0; i < out->sourceCount; i++) { 
-         out->sources[i].type = CB_SRC_VoltageACDC;
+         assign_genreBase_Source(out->opts.genre, &out->sources[i]);
          out->sources[i].nPlus = 1u; //Positive at n1
          out->sources[i].nMinus = 0u; //Neg at n2 (GND)
-         out->sources[i].value = rand_range_double(1.0, 50.0); //Volts
+         
       }
    
    //Difficulty base Two - Medium setting
    if (difficultyBase == 2u) { 
       
       for(unsigned i = 0; i < out->componentCount; i++) {
-            out->components[i].type  = CB_COMP_Resistor;
-
+            assign_genreBase_Component(out->opts.genre, &out->components[i]);
             assign_numType_value(&out->components[i], numTypeSw);
             if ((i % 2) == 0) {
                if (i < 2) {
@@ -318,18 +416,17 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
             }  
       }
       for(unsigned i = 0; i < out->sourceCount; i++) {
-         out->sources[i].type = CB_SRC_VoltageACDC;
+         assign_genreBase_Source(out->opts.genre, &out->sources[i]);
          out->sources[i].nPlus = 1u;
          out->sources[i].nMinus = 0u;
-         out->sources[i].value = rand_range_double(1.0, 50.0);
+         
       }
    }
 //Difficulty base three - Hard setting
    if (difficultyBase == 3u) { 
       
       for (unsigned i = 0; i < out->componentCount; i++) {
-         out->components[i].type = CB_COMP_Resistor;
-
+         assign_genreBase_Component(out->opts.genre, &out->components[i]);
          assign_numType_value(&out->components[i], numTypeSw);
 
          if ((i % 2) == 0) {
@@ -362,8 +459,7 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
          }
       }
       for (unsigned i = 0; i < out->sourceCount; i++) {
-         out->sources[i].type = CB_SRC_VoltageACDC;
-         out->sources[i].value = rand_range_double(1.0, 50.0);
+          assign_genreBase_Source(out->opts.genre, &out->sources[i]);
          if ((i % 2) == 0) { 
             out->sources[i].nPlus = (i + 1u);
          }

@@ -36,8 +36,8 @@ static const char* diff_name(CB_difficulty d) {
 static const char* genre_name(CB_Genre g) { 
    switch (g) {
       case CB_G_dcSteady: return "DC Steady";
-      case CB_G_AcSinusoidal: return "AC Sinusoidal";
-      case CB_G_RL: return "RL - time Domain";
+      case CB_G_AcDcSinusoidal: return "AC Sinusoidal and Dc Steady Mixed";
+      case CB_G_AcSinusoidal: return " - AC Sinusoidal";
       case CB_G_RC: return "RC - time Domain";
       case CB_G_RLC: return "RLC - time Domain";
       case CB_G_OPAMP: return "Opamp DC - Solve for Voltage out";
@@ -48,8 +48,8 @@ static const char* genre_name(CB_Genre g) {
 static const char* numtype_name(CB_numType n) {
    switch (n) {
       case CB_NT_Real: return "Real Numbers";
-      case CB_NT_Complex: return "Real/Complex Numbers";
-      case CB_NT_RealComplex: return "Complex Numbers";
+      case CB_NT_RealComplex: return "Real/Complex Numbers";
+      case CB_NT_Complex: return "Complex Numbers";
       case CB_NT_FreqDomain: return "Frequency using laplace Style Components";
       default: return "Unknown";
    }
@@ -70,22 +70,52 @@ static void print_ckt_details(const CB_Ckt *ckt) {
       double re = c->value;
       double im = c->imag;
       if (fabs(c->imag) < 1e-12) {
-         printf("Component [%u]: type=%d | n1=%u | n2=%u | value=%g\n",
+
+         printf("Component [%u]: type = %d | n1 = %u | n2 = %u | value = %g Ohms\n",
              i, (int)c->type, c->n1, c->n2, c->value);
       }
       else {
          double rel = sqrt((re * re) + (im * im));
          double ima = atan(im / re) * (180.0 / 3.14159265358979323);
-         printf("Component [%u]: type=%d | n1=%u | n2=%u | rect=%g  %+gj  | polar=%g < %+g\n",
-             i, (int)c->type, c->n1, c->n2, c->value, c->imag, rel, ima);
-            
+         if (c->type == CB_COMP_CAP) {
+            printf("Component [%u]: type = %d | n1 = %u | n2 = %u | rect = %g  %+gj | polar = %g < %+g Farad\n",
+               i, (int)c->type, c->n1, c->n2, c->value, c->imag, rel, ima);
+         }
+         else if (c->type == CB_COMP_INDUC) {
+            printf("Component [%u]: type = %d | n1 = %u | n2 = %u | rect = %g  %+gj | polar = %g < %+g Henry\n",
+               i, (int)c->type, c->n1, c->n2, c->value, c->imag, rel, ima);
+         } 
       }
    }
 
    for (i = 0; i < ckt->sourceCount; i++) {
       const CB_Source *s = &ckt->sources[i];
-      printf("Source [%u]: type=%d | net Plus=%u | net Minus=%u | value=%g\n",
-             i, (int)s->type, s->nPlus, s->nMinus, s->value);
+
+      double re = s->value;
+      double im = s->imag;
+
+      if (fabs(s->imag) < 1e-12) {
+         if (s->type == CB_SRC_CurrentDC) {
+            printf("Source [%u]: type=%d | net Plus=%u | net Minus=%u | value=%g Amps\n",
+                  i, (int)s->type, s->nPlus, s->nMinus, s->value);
+         }
+         else {
+            printf("Source [%u]: type=%d | net Plus=%u | net Minus=%u | value=%g Volts\n",
+                  i, (int)s->type, s->nPlus, s->nMinus, s->value);
+         }
+      }
+      else {
+         double rel = sqrt((re * re) + (im * im));
+         double ima = atan(im / re) * (180.0 / 3.14159265358979323);
+         if (s->type == CB_SRC_CurrentAC) {
+            printf("Source [%u]: type=%d | net Plus=%u | net Minus=%u | rect=%g %+gj | polar = %g < %+g Amps\n",
+               i, (int)s->type, s->nPlus, s->nMinus, s->value, s->imag, rel, ima);
+         }
+         else {
+            printf("Source [%u]: type=%d | net Plus=%u | net Minus=%u | rect=%g %+gj | polar = %g < %+g Volts\n",
+               i, (int)s->type, s->nPlus, s->nMinus, s->value, s->imag, rel, ima);
+         }
+      }
    }
 }
 
@@ -128,7 +158,7 @@ int main(void) {
    printf("Select number type -> (0=Real, 1=Real/Complex, 2=Complex, 3=FreqDomain): ");
    if (scanf("%d", &n) != 1) return 1;
 
-   printf("Select Genre -> (0=DC, 1=AC, 2=RL, 3=RC, 4=RLC, 5=OPAMP): ");
+   printf("Select Genre -> (0=DC, 1=AC/DC 2=AC, 3=RC, 4=RLC, 5=OPAMP): ");
    if (scanf("%d", &g) != 1) return 1;
 
 

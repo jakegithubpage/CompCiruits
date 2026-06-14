@@ -162,12 +162,7 @@ int DC_Build_FromOut(const CB_Ckt *out)
     
     /* count voltage sources from out->sources*/
     for (sourceIndex = 0; sourceIndex < out->sourceCount; sourceIndex++) {
-           printf("src[%u] type=%d expected=%d value=%f\n",
-           sourceIndex,
-           (int)out->sources[sourceIndex].type,
-           (int)CB_SRC_VoltageACDC,
-           out->sources[sourceIndex].value);
-        if (out->sources[sourceIndex].type != CB_SRC_VoltageACDC) return 0;
+        if (out->sources[sourceIndex].type < 0) return 0;
         if (out->sources[sourceIndex].value <= 0.0) return 0;
         
         //NPlus/Minus will never be greater than 1 as 1/0 represents their True or flase values.
