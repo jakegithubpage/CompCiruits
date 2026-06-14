@@ -48,8 +48,8 @@ static const char* genre_name(CB_Genre g) {
 static const char* numtype_name(CB_numType n) {
    switch (n) {
       case CB_NT_Real: return "Real Numbers";
-      case CB_NT_Complex: return "Complex Numbers";
-      case CB_NT_RealComplex: return "Real/Complex Numbers";
+      case CB_NT_Complex: return "Real/Complex Numbers";
+      case CB_NT_RealComplex: return "Complex Numbers";
       case CB_NT_FreqDomain: return "Frequency using laplace Style Components";
       default: return "Unknown";
    }
@@ -76,7 +76,7 @@ static void print_ckt_details(const CB_Ckt *ckt) {
       else {
          double rel = sqrt((re * re) + (im * im));
          double ima = atan(im / re) * (180.0 / 3.14159265358979323);
-         printf("Component [%u]: type=%d | n1=%u | n2=%u | rect=%g  %+g  | polar=%g < %+gj\n",
+         printf("Component [%u]: type=%d | n1=%u | n2=%u | rect=%g  %+gj  | polar=%g < %+g\n",
              i, (int)c->type, c->n1, c->n2, c->value, c->imag, rel, ima);
             
       }

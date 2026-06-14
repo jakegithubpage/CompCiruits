@@ -124,6 +124,15 @@ static unsigned base_for_numType(CB_numType n) {
    }
 }
 
+static SwitchNumType to_switch_numType(CB_numType n) {
+   switch (n) {
+      case CB_NT_Real:        return SWITCH_REAL;
+      case CB_NT_RealComplex: return SWITCH_RECO;
+      case CB_NT_Complex:     return SWITCH_COMP;
+      case CB_NT_FreqDomain:  return SWITCH_FREQ;
+      default:                return SWITCH_REAL;
+   }
+}
 //Non-Fatal Num conflict handle
 static int warn_NonTypical_combo(CB_Genre genre, CB_numType numType) {
    if (genre == CB_G_AcSinusoidal && numType == CB_NT_Real) {
@@ -150,7 +159,29 @@ static int rand_range_int(int min, int max) {
    return min + (rand() % (max - min + 1));
 }
 
+static void assign_numType_value(CB_Component *c, SwitchNumType numTypeSw) {
+   c->value = rand_range_double(100.0, 10000.0);
+   c->imag = 0.0;
 
+   switch (numTypeSw) {
+      case SWITCH_REAL:
+         c->imag = 0.0;
+      break;
+      case SWITCH_RECO:
+         if (rand_range_int(0,1) == 1) {
+            c->imag = rand_range_double(-5000.0, 5000.0);
+         }
+      break;
+      case SWITCH_COMP:
+         c->imag = rand_range_double(-5000.0, 5000.0);
+      break;
+      case SWITCH_FREQ:
+
+      break;
+      default:
+      break;
+   }
+}
 /* Difficulty: sets outputs to solve for and how many nodes will be in the circuit
    Genre: Sets: what type of circuit problem will be generated. Ex: Signals/Systems, RLC, RL, RC, Source/Resistors, Opamps, etc
    Number type: Sets if Number/Sources are Exponential, Rational, Complex*/
@@ -160,6 +191,9 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
    unsigned numTypeBase;
    int warnCode;
 
+   SwitchNumType numTypeSw = SWITCH_REAL;
+
+   
    //Handle Failure of output in case of NULL -> push NULL Err code
    if(out == NULL) {
       return CB_EM_BuildFailed;
@@ -198,6 +232,8 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
    if (out->errorCount > 0) {
       return out->lastErrorCode;
    }
+   numTypeSw = to_switch_numType(out->opts.numType);
+   
 
    difficultyBase = base_Unknodes_for_difficulty(out->opts.difficulty);
    if (difficultyBase == 0u) { 
@@ -228,6 +264,7 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
    ratio_for_difficulty(out->opts.difficulty, &out->sourceCount, &out->componentCount);
    //Difficulty base one - Easy setting
    if (difficultyBase == 1u) {
+      
       for(unsigned i = 0; i < out->componentCount; i++) { 
 
          out->components[i].type = CB_COMP_Resistor;
@@ -240,19 +277,7 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
          out->components[i].n1 = 1u; //Resistor terminal Pos at node 1
          out->components[i].n2 = 2u; //resistor terminal Pos at node 2 
          }
-         if (numTypeBase == CB_NT_Real) {
-         out->components[i].value = rand_range_double(100.0, 10000.0);
-         }
-         else if (numTypeBase == CB_NT_RealComplex) {
-            unsigned coinFlip = rand_range_int(0,100);
-            if (coinFlip > 50.0) {
-               out->components[i].value = rand_range_double(100.0, 10000.0);
-               out->components[i].imag = rand_range_double(-5000.0, 5000.0);
-            }
-            else {
-               out->components[i].value = rand_range_double(100.0, 10000.0);
-               out->components[i].imag = 0;
-            }
+         assign_numType_value(&out->components[i], numTypeSw);
 
          } //ohms
       }
@@ -262,12 +287,14 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
          out->sources[i].nMinus = 0u; //Neg at n2 (GND)
          out->sources[i].value = rand_range_double(1.0, 50.0); //Volts
       }
-   }
+   
    //Difficulty base Two - Medium setting
    if (difficultyBase == 2u) { 
+      
       for(unsigned i = 0; i < out->componentCount; i++) {
             out->components[i].type  = CB_COMP_Resistor;
-            out->components[i].value = rand_range_double(100.0, 10000.0);
+
+            assign_numType_value(&out->components[i], numTypeSw);
             if ((i % 2) == 0) {
                if (i < 2) {
                   out->components[i].n1 = (i + 1u);   // example placement
@@ -299,9 +326,12 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
    }
 //Difficulty base three - Hard setting
    if (difficultyBase == 3u) { 
+      
       for (unsigned i = 0; i < out->componentCount; i++) {
          out->components[i].type = CB_COMP_Resistor;
-         out->components[i].value = rand_range_double(100.0, 10000.0);
+
+         assign_numType_value(&out->components[i], numTypeSw);
+
          if ((i % 2) == 0) {
             if (i == 2) {
                out->components[i].n1 = (i);
@@ -343,11 +373,10 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
          out->sources[i].nMinus = 0u;
       }
    }
-/* additional difficulty handlers to be added later
    if (difficultyBase == 4u) { 
       
    }
-*/
+
       
 
 

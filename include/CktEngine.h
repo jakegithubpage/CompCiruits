@@ -45,11 +45,17 @@ typedef enum CB_Genre{
 //pub types - number type
 typedef enum CB_numType{
     CB_NT_Real = 0,
-    CB_NT_Complex = 1,
-    CB_NT_RealComplex = 2,
+    CB_NT_RealComplex = 1,
+    CB_NT_Complex = 2,
     CB_NT_FreqDomain = 3
 } CB_numType;
 
+typedef enum SwitchNumType{
+    SWITCH_REAL = 0u,
+    SWITCH_RECO = 1u,
+    SWITCH_COMP = 2u,
+    SWITCH_FREQ = 3u
+} SwitchNumType;
 //struct for build combination
 typedef struct CB_buildOps{
     CB_difficulty difficulty;
@@ -81,6 +87,10 @@ typedef struct {
     double value;
     double imag;
 } CB_Component;
+
+typedef struct {
+    SwitchNumType Index;
+} SwitchScroll;
 // Valid genre handler
 static inline int CB_diffValid(CB_difficulty g) {
     return (g >= 0) && (g <= CB_DIFF_Einstein);
@@ -115,7 +125,7 @@ typedef struct CB_Ckt{
     CB_errorMask errorMask; //Enum to mask error Nums
     int errorCount; //Count total Erros
     int errorStack[CB_MAX_ERROR_STACK]; //Count error codes together
-
+    SwitchScroll refers;
     CB_WarnMask warnMask; //Warning structs
     int warnCount;
     int warnStack[CB_MAX_WARN_STACK];
