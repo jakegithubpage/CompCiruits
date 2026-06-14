@@ -1,16 +1,30 @@
 MODIFY NEXT:
 </1. DEAL WITH OUT->COMPONENT COUNT: Develop a ratio based system 
 that uses Difficulty level to confgure  
-2. Brainstorm more Warning codes for circuit build, Possibly impossible options
+
+</2. Brainstorm more Warning codes for circuit build, Possibly impossible options
 resulting in a buildable but unsolveable circuit
+
 </3. Start Developing a most basic matrix builder: DC format both header and Source. ENSURE THAT: matrix is being 
 built as simple as possible right now, 1 Source 2 Resistors solving for the only unKnown Node!
-4. Make a simple cc_solver declaration and build function for solving basic DC SS
-5. Start developing a GUI for Circuit built. utilizing Cktengine and Matrix Build by
+
+</4. Make a simple cc_solver declaration and build function for solving basic DC SS
+
+</5. Start developing a GUI for Circuit built. utilizing Cktengine and Matrix Build by
 Look into graphic construction in C
+
 </6.Comment and detail DcMatrix Funcs for readability
+
 </7. Integrate basic random seeding into component and resistor values for better customization
 
+8. Make GUI much better improve it graphics wise and add clickables
+
+9. Make even more warning code and brainstorm more combinations for build process flow
+
+10. Modify DCmatrix to handle complex numbers and mixed real and complex
+
+11. Put some thought into how randomization can be improved and variability of circuit building
+can be properly and efficiently increased!
 
 
               ***FOR LATER CIRCUIT ORGANIZATION***,
