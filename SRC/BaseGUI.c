@@ -12,8 +12,8 @@ volatile int rateSelect;
 
 
 
-int BaseGUI_Run(unsigned nodeCount) { 
-    CB_Ckt ckt;
+int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) { 
+
     SDL_SetMainReady();
     if (SDL_Init(SDL_INIT_VIDEO) != 0) return 1;
        
@@ -90,18 +90,35 @@ int BaseGUI_Run(unsigned nodeCount) {
         cairo_line_to(cr, 300, 380);
         cairo_stroke(cr);
 
-        //Source symbol
-        cairo_arc(cr, 300.0, 340.0, 40.0, 0.0, 6.283185307179586); // 2*pi
-        cairo_stroke(cr);
+        //Source Symbol
+        for (unsigned i = 0; i < ckt->sourceCount; i++) {
+            const CB_Source *s = &ckt->sources[i];
+            if (s->type == CB_SRC_VoltageDC) {
+                cairo_arc(cr, 300.0, 340.0, 40.0, 0.0, 6.283185307179586); // 2*pi
+                cairo_stroke(cr);
 
-        //Plus Minus signs
-        cairo_move_to(cr, 310, 320);
-        cairo_line_to(cr, 290, 320);
-        cairo_move_to(cr, 300, 310);
-        cairo_line_to(cr, 300, 330);
-        cairo_move_to(cr, 310, 360);
-        cairo_line_to(cr, 290, 360);
-        cairo_stroke(cr);
+                //Plus Minus signs
+                cairo_move_to(cr, 310, 320);
+                cairo_line_to(cr, 290, 320);
+                cairo_move_to(cr, 300, 310);
+                cairo_line_to(cr, 300, 330);
+                cairo_move_to(cr, 310, 360);
+                cairo_line_to(cr, 290, 360);
+                cairo_stroke(cr);
+            }
+            else if (s->type == CB_SRC_CurrentDC) {
+                cairo_arc(cr, 300.0, 340.0, 40.0, 0.0, 6.283185307179586); // 2*pi
+                cairo_stroke(cr);
+                //Current sign
+                cairo_move_to(cr, 300, 320);
+                cairo_line_to(cr, 300, 360);
+                cairo_move_to(cr, 300, 320);
+                cairo_line_to(cr, 290, 330);
+                cairo_move_to(cr, 300, 320);
+                cairo_line_to(cr, 310, 330);
+                cairo_stroke(cr);
+            }
+        }
 
         //Wire above Voltage source
         cairo_move_to(cr, 300, 300);
@@ -163,18 +180,34 @@ int BaseGUI_Run(unsigned nodeCount) {
         cairo_stroke(cr);
 
         //Source symbol
-        cairo_arc(cr, 300.0, 340.0, 40.0, 0.0, 6.283185307179586); // 2*pi
-        cairo_stroke(cr);
+        for (unsigned i = 0; i < ckt->sourceCount; i++) {
+            const CB_Source *s = &ckt->sources[i];
+            if (s->type == CB_SRC_VoltageDC) {
+                cairo_arc(cr, 300.0, 340.0, 40.0, 0.0, 6.283185307179586); // 2*pi
+                cairo_stroke(cr);
 
-        //Plus Minus signs
-        cairo_move_to(cr, 310, 320);
-        cairo_line_to(cr, 290, 320);
-        cairo_move_to(cr, 300, 310);
-        cairo_line_to(cr, 300, 330);
-        cairo_move_to(cr, 310, 360);
-        cairo_line_to(cr, 290, 360);
-        cairo_stroke(cr);
+                //Plus Minus signs
+                cairo_move_to(cr, 310, 320);
+                cairo_line_to(cr, 290, 320);
+                cairo_move_to(cr, 300, 310);
+                cairo_line_to(cr, 300, 330);
+                cairo_move_to(cr, 310, 360);
+                cairo_line_to(cr, 290, 360);
+                cairo_stroke(cr);
+            }
+            else if (s->type == CB_SRC_CurrentDC) {
+                cairo_arc(cr, 300.0, 340.0, 40.0, 0.0, 6.283185307179586); // 2*pi
+                cairo_stroke(cr);
 
+                cairo_move_to(cr, 300, 320);
+                cairo_line_to(cr, 300, 360);
+                cairo_move_to(cr, 300, 320);
+                cairo_line_to(cr, 290, 330);
+                cairo_move_to(cr, 300, 320);
+                cairo_line_to(cr, 310, 330);
+                cairo_stroke(cr);
+            }
+        }
         //Wire above Voltage source
         cairo_move_to(cr, 300, 300);
         cairo_line_to(cr, 300, 200);
@@ -276,18 +309,7 @@ int BaseGUI_Run(unsigned nodeCount) {
         cairo_line_to(cr, 300, 580);
         cairo_stroke(cr);
 
-        //Source symbol one
-        cairo_arc(cr, 300.0, 540.0, 40.0, 0.0, 6.283185307179586); // 2*pi
-        cairo_stroke(cr);
-
-        //Plus Minus signs
-        cairo_move_to(cr, 310, 520);
-        cairo_line_to(cr, 290, 520);
-        cairo_move_to(cr, 300, 510);
-        cairo_line_to(cr, 300, 530);
-        cairo_move_to(cr, 310, 560);
-        cairo_line_to(cr, 290, 560);
-        cairo_stroke(cr);
+        
 
         //Wire above Voltage source
         cairo_move_to(cr, 300, 500);
@@ -317,20 +339,68 @@ int BaseGUI_Run(unsigned nodeCount) {
         cairo_move_to(cr, 860, 400);
         cairo_line_to(cr, 860, 500);
         cairo_stroke(cr);
+        for (unsigned i = 0; i < ckt->sourceCount; i++) {
+            const CB_Source *s = &ckt->sources[i];
+            //Source symbol two - "outter second mesh"
+            if (i == 1) {
+                if (s->type == CB_SRC_VoltageDC) {
+                    //Voltage Source DC #2
+                    cairo_arc(cr, 860.0, 540.0, 40.0, 0.0, 6.283185307179586); // 2*pi
+                    cairo_stroke(cr);
 
-        //Source symbol two - "outter second mesh"
-        cairo_arc(cr, 860.0, 540.0, 40.0, 0.0, 6.283185307179586); // 2*pi
-        cairo_stroke(cr);
+                    //Plus/Minus signs two
+                    cairo_move_to(cr, 870, 520);
+                    cairo_line_to(cr, 850, 520);
+                    cairo_move_to(cr, 860, 510);
+                    cairo_line_to(cr, 860, 530);
+                    cairo_move_to(cr, 870, 560);
+                    cairo_line_to(cr, 850, 560);
+                    cairo_stroke(cr);
+                }
+                else if (s->type == CB_SRC_CurrentDC) {
+                    //Current Source DC
+                    cairo_arc(cr, 860.0, 540.0, 40.0, 0.0, 6.283185307179586); // 2*pi
+                    cairo_stroke(cr);
 
-        //Plus/Minus signs two
-        cairo_move_to(cr, 870, 520);
-        cairo_line_to(cr, 850, 520);
-        cairo_move_to(cr, 860, 510);
-        cairo_line_to(cr, 860, 530);
-        cairo_move_to(cr, 870, 560);
-        cairo_line_to(cr, 850, 560);
-        cairo_stroke(cr);
-        
+                    cairo_move_to(cr, 860, 520);
+                    cairo_line_to(cr, 860, 560);
+                    cairo_move_to(cr, 860, 520);
+                    cairo_line_to(cr, 870, 530);
+                    cairo_move_to(cr, 860, 520);
+                    cairo_line_to(cr, 850, 530);
+                    cairo_stroke(cr);
+                }
+            }
+            //Source Symbol 1
+            else if (i == 0) {
+                //Voltage source - source #1
+                if (s->type == CB_SRC_VoltageDC) {
+                    cairo_arc(cr, 300.0, 540.0, 40.0, 0.0, 6.283185307179586); // 2*pi
+                    cairo_stroke(cr);
+
+                    //Plus Minus signs
+                    cairo_move_to(cr, 310, 520);
+                    cairo_line_to(cr, 290, 520);
+                    cairo_move_to(cr, 300, 510);
+                    cairo_line_to(cr, 300, 530);
+                    cairo_move_to(cr, 310, 560);
+                    cairo_line_to(cr, 290, 560);
+                    cairo_stroke(cr);
+                }
+                else if (s->type == CB_SRC_CurrentDC) {
+                    cairo_arc(cr, 300.0, 540.0, 40.0, 0.0, 6.283185307179586); // 2*pi
+                    cairo_stroke(cr);
+
+                    cairo_move_to(cr, 300, 520);
+                    cairo_line_to(cr, 300, 560);
+                    cairo_move_to(cr, 300, 520);
+                    cairo_line_to(cr, 310, 530);
+                    cairo_move_to(cr, 300, 520);
+                    cairo_line_to(cr, 290, 530);
+                    cairo_stroke(cr);
+                }
+            }
+        }   
         //Bottom wire - Second mesh outter branch
         cairo_move_to(cr, 860, 580);
         cairo_line_to(cr, 860, 680);

@@ -20,9 +20,10 @@ enum{
 //Warning code implementation
 enum {
     CB_WARN_None = 0,
-    CB_WARN_Ac_Real = 1000,
-    CB_WARN_AcDc_Real = 1001,
-    CB_WARN_DC_COMP = 1010
+    CB_WARN_Ac_Real = 0000,
+    CB_WARN_AcDc_Real = 0001,
+    CB_WARN_DC_COMP = 0010,
+    CB_WARN_MIX_TYPEC = 0011
 
 };
 

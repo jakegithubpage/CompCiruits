@@ -132,13 +132,21 @@ static void print_DcMat_details(void) {
    printf("Source Count: %u\n", m->sourceCount);
    printf("MatDimension: %u\n", m->MatDimension);
 }
+typedef struct GuiThreadArgs {
+    CB_Ckt *ckt;
+    unsigned nodeCount;
+} GuiThreadArgs;
 
 static unsigned _stdcall gui_thread_proc(void *p) {
-   unsigned nodeCount = *(unsigned *)p;
-   free(p);
-   BaseGUI_Run(nodeCount);
-   return 0;
+    GuiThreadArgs *a = (GuiThreadArgs *)p;
+    if (!a) return 0;
+
+    BaseGUI_Run(a->ckt, a->nodeCount);   
+    free(a);
+    return 0;
 }
+
+
 
 
 
@@ -199,9 +207,10 @@ if (!ok) {
 
 print_DcMat_details();
 //Launch diagram of circuit - Launch in thread process
-unsigned *arg = (unsigned *)malloc(sizeof(*arg));
+GuiThreadArgs *arg = (GuiThreadArgs *)malloc(sizeof(*arg));
 if (arg) {
-   *arg = ckt.nodeCount;
+   arg->ckt = &ckt;
+   arg->nodeCount = ckt.nodeCount;
    uintptr_t th = _beginthreadex(NULL, 0, gui_thread_proc, arg, 0, NULL);
    if (th) CloseHandle((HANDLE)th); //detach thread
 }

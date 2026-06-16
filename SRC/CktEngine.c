@@ -144,6 +144,9 @@ static int warn_NonTypical_combo(CB_Genre genre, CB_numType numType) {
    if (genre == CB_G_dcSteady && (numType == CB_NT_RealComplex || numType == CB_NT_Complex)) {
       return CB_WARN_DC_COMP;
    }
+   if (numType == CB_NT_RealComplex) {
+      return CB_WARN_MIX_TYPEC;
+   }
    return CB_WARN_None;
 }
 
@@ -169,7 +172,6 @@ static void assign_numType_value(CB_Component *c, SwitchNumType numTypeSw) {
    c->value = rand_range_double(100.0, 10000.0);
    c->imag = 0.0;
 
-   if (c->type == 1u) return;
    switch (numTypeSw) {
       case SWITCH_REAL:
          c->imag = 0.0;
@@ -212,19 +214,6 @@ static void assign_genreBase_Source(CB_Genre genre, CB_Source *s) {
          }
       break;
       case CB_G_AcDcSinusoidal:
-         if (coinFlip()) {
-            if (coinFlip()) {
-               s->type = CB_SRC_VoltageAC;
-               s->value = rand_range_double(1.0, 50.0);
-               s->imag = rand_range_double(-500.0, 500.0);
-            }
-            else {
-               s->type = CB_SRC_CurrentAC;
-               s->value = rand_range_double(1.0, 50.0);
-               s->imag = rand_range_double(-500.0, 500.0);
-            }
-         }
-         else {
             if (coinFlip()) {
                s->type = CB_SRC_VoltageDC;
                s->value = rand_range_double(1.0, 50.0);
@@ -235,7 +224,6 @@ static void assign_genreBase_Source(CB_Genre genre, CB_Source *s) {
                s->value = rand_range_double(1.0, 50.0);
                s->imag = 0.0;
             }
-         }
       break;
       case CB_G_AcSinusoidal:
          if (coinFlip()) {
@@ -252,30 +240,96 @@ static void assign_genreBase_Source(CB_Genre genre, CB_Source *s) {
    }
 }
 
-static void assign_genreBase_Component(CB_Genre genre, CB_Component *c) {
+static void assign_genreBase_Component(CB_Genre genre, CB_Component *c, SwitchNumType numTypeSw) {
    
    switch(genre) {
       case CB_G_dcSteady:
-         c->type = CB_COMP_Resistor;
+         if (numTypeSw == SWITCH_REAL) {
+            c->type = CB_COMP_Resistor;
+         }
+         else if (numTypeSw == SWITCH_RECO) {
+            unsigned coin = (unsigned)coinFlip3();
+            if (coin == 2) {
+               c->type = CB_COMP_CAP;
+            }
+            else if(coin == 1) {
+               c->type = CB_COMP_INDUC;
+            }
+            else {
+               c->type = CB_COMP_Resistor;
+            }
+         }
+         else if (numTypeSw == SWITCH_COMP) {
+            unsigned coin = (unsigned)coinFlip();
+            if (coin == 1) {
+               c->type = CB_COMP_CAP;
+            }
+            else {
+               c->type = CB_COMP_INDUC;
+            }
+         }
+         else if (numTypeSw == SWITCH_FREQ) {
+
+         }
+         
+         
       break;
       case CB_G_AcDcSinusoidal:
-         unsigned coin = (unsigned)coinFlip3();
-         if (coin == 2) {
-            c->type = CB_COMP_CAP;
+         
+         if (numTypeSw == SWITCH_RECO) {
+            unsigned coin = (unsigned)coinFlip3();
+            if (coin == 2) {
+               c->type = CB_COMP_CAP;
+            }
+            else if(coin == 1) {
+               c->type = CB_COMP_INDUC;
+            }
+            else {
+               c->type = CB_COMP_Resistor;
+            }
          }
-         else if(coin == 1) {
-            c->type = CB_COMP_INDUC;
+         else if (numTypeSw == SWITCH_COMP) {
+            unsigned coin = (unsigned)coinFlip();
+            if (coin == 1) {
+               c->type = CB_COMP_CAP;
+            }
+            else {
+               c->type = CB_COMP_INDUC;
+            }
+         }
+         else if (numTypeSw == SWITCH_FREQ) {
+
          }
          else {
             c->type = CB_COMP_Resistor;
          }
       break;
       case CB_G_AcSinusoidal:
-         if (coinFlip()) {
-            c->type = CB_COMP_CAP;
+         if (numTypeSw == SWITCH_COMP) {
+            if (coinFlip()) {
+               c->type = CB_COMP_CAP;
+            }
+            else {
+               c->type = CB_COMP_INDUC;
+            }
+         }
+         else if (numTypeSw == SWITCH_RECO) {
+            unsigned coin = (unsigned)coinFlip3();
+            if (coin == 2) {
+               c->type = CB_COMP_CAP;
+            }
+            else if(coin == 1) {
+               c->type = CB_COMP_INDUC;
+            }
+            else {
+               c->type = CB_COMP_Resistor;
+            }
+         }
+         else if (numTypeSw == SWITCH_FREQ) {
+
          }
          else {
-            c->type = CB_COMP_INDUC;
+            c->type = CB_COMP_Resistor;
          }
       break;
    }
@@ -366,7 +420,7 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
       for(unsigned i = 0; i < out->componentCount; i++) { 
 
 
-         assign_genreBase_Component(out->opts.genre, &out->components[i]);
+         assign_genreBase_Component(out->opts.genre, &out->components[i], numTypeSw);
          if(i == 0) {
          //Node 1/2 node relative to each side of component
          out->components[i].n1 = 2u; //Resistor terminal Pos at node 1
@@ -391,7 +445,7 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
    if (difficultyBase == 2u) { 
       
       for(unsigned i = 0; i < out->componentCount; i++) {
-            assign_genreBase_Component(out->opts.genre, &out->components[i]);
+            assign_genreBase_Component(out->opts.genre, &out->components[i], numTypeSw);
             assign_numType_value(&out->components[i], numTypeSw);
             if ((i % 2) == 0) {
                if (i < 2) {
@@ -426,7 +480,7 @@ int buildCkt(const CB_buildOps *opt, CB_Ckt *out) {
    if (difficultyBase == 3u) { 
       
       for (unsigned i = 0; i < out->componentCount; i++) {
-         assign_genreBase_Component(out->opts.genre, &out->components[i]);
+         assign_genreBase_Component(out->opts.genre, &out->components[i], numTypeSw);
          assign_numType_value(&out->components[i], numTypeSw);
 
          if ((i % 2) == 0) {

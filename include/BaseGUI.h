@@ -6,7 +6,7 @@
 
 typedef struct CB_Ckt CB_Ckt;
 
-int BaseGUI_Run(unsigned nodeCount);
+int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount);
 
 
 
