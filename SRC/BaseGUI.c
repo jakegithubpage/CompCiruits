@@ -10,6 +10,13 @@ pulled from randomized seeding and selected options in the circuit build section
 
 volatile int rateSelect;
 
+static void draw_Valuelabel(cairo_t *cr, double x, double y, const char *text) {
+    cairo_set_source_rgb(cr, 0.05, 0.05, 0.05);
+    cairo_select_font_face(cr, "Segoe UI", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
+    cairo_set_font_size(cr, 20.0);
+    cairo_move_to(cr, x, y);
+    cairo_show_text(cr, text);
+}
 
 
 int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) { 
@@ -40,46 +47,64 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
     cairo_paint(cr);
     
     if (rateSelect == 1u) {
-        // "Wire" - schematic
-        cairo_set_source_rgb(cr, 0.1, 0.1, 0.1);
-        cairo_set_line_width(cr, 3.0);
-        cairo_move_to(cr, 300, 200);
-        cairo_line_to(cr, 400, 200);
-        cairo_stroke(cr);
 
-        // "Resistor Zig-Zag" - schematic
-        cairo_move_to(cr, 400, 200);
-        cairo_line_to(cr, 410, 185);
-        cairo_line_to(cr, 430, 215);
-        cairo_line_to(cr, 450, 185);
-        cairo_line_to(cr, 470, 215);
-        cairo_line_to(cr, 480, 200);
-        cairo_stroke(cr);
+    for (unsigned i = 0; i < ckt->componentCount; i++) {
 
-        // "Wire" - schematic
-        cairo_move_to(cr, 480, 200);
-        cairo_line_to(cr, 580, 200);
-        cairo_stroke(cr);
+        switch(i) {
+            char buf[64];
 
-        // "Wire" - schematic
-        cairo_move_to(cr, 580, 200);
-        cairo_line_to(cr, 580, 300);
-        cairo_stroke(cr);
+            case 0u: 
+                    // "Wire" - schematic
+                cairo_set_source_rgb(cr, 0.1, 0.1, 0.1);
+                cairo_set_line_width(cr, 3.0);
+                cairo_move_to(cr, 300, 200);
+                cairo_line_to(cr, 400, 200);
+                cairo_stroke(cr);
 
-        // "Resistor zig zag" 
-        cairo_move_to(cr, 580, 300);
-        cairo_line_to(cr, 595, 310);
-        cairo_line_to(cr, 565, 330);
-        cairo_line_to(cr, 595, 350);
-        cairo_line_to(cr, 565, 370);
-        cairo_line_to(cr, 580, 380);
-        cairo_stroke(cr);
+                snprintf(buf, sizeof(buf), "%.2f Ohms", ckt->components[i].value);
+                draw_Valuelabel(cr, 390, 165, buf);
+                // "Resistor Zig-Zag" - schematic
+                cairo_move_to(cr, 400, 200);
+                cairo_line_to(cr, 410, 185);
+                cairo_line_to(cr, 430, 215);
+                cairo_line_to(cr, 450, 185);
+                cairo_line_to(cr, 470, 215);
+                cairo_line_to(cr, 480, 200);
+                cairo_stroke(cr);
 
-        // Wire - below 2nd Resistor
-        cairo_move_to(cr, 580, 380);
-        cairo_line_to(cr, 580, 480);
-        cairo_stroke(cr);
+                // "Wire" - schematic
+                cairo_move_to(cr, 480, 200);
+                cairo_line_to(cr, 580, 200);
+                cairo_stroke(cr);
+            break;
+            case 1u:
+                        // "Wire" - schematic
+                cairo_move_to(cr, 580, 200);
+                cairo_line_to(cr, 580, 300);
+                cairo_stroke(cr);
 
+                snprintf(buf, sizeof(buf), "%.2f Ohms", ckt->components[i].value);
+                draw_Valuelabel(cr, 615, 345, buf);
+                // "Resistor zig zag" 
+                cairo_move_to(cr, 580, 300);
+                cairo_line_to(cr, 595, 310);
+                cairo_line_to(cr, 565, 330);
+                cairo_line_to(cr, 595, 350);
+                cairo_line_to(cr, 565, 370);
+                cairo_line_to(cr, 580, 380);
+                cairo_stroke(cr);
+
+                // Wire - below 2nd Resistor
+                cairo_move_to(cr, 580, 380);
+                cairo_line_to(cr, 580, 480);
+                cairo_stroke(cr);
+            break;
+
+        }
+      
+
+    }
+       
         //GND Point - bottom of Voltage divider
         cairo_move_to(cr, 580, 480);
         cairo_line_to(cr, 300, 480);
@@ -93,10 +118,13 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
         //Source Symbol
         for (unsigned i = 0; i < ckt->sourceCount; i++) {
             const CB_Source *s = &ckt->sources[i];
+            char buf[64];
+            
             if (s->type == CB_SRC_VoltageDC) {
                 cairo_arc(cr, 300.0, 340.0, 40.0, 0.0, 6.283185307179586); // 2*pi
                 cairo_stroke(cr);
-
+                snprintf(buf, sizeof(buf), "%.2f V", ckt->sources[i].value);
+                draw_Valuelabel(cr, 180, 350, buf);
                 //Plus Minus signs
                 cairo_move_to(cr, 310, 320);
                 cairo_line_to(cr, 290, 320);
@@ -109,7 +137,10 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
             else if (s->type == CB_SRC_CurrentDC) {
                 cairo_arc(cr, 300.0, 340.0, 40.0, 0.0, 6.283185307179586); // 2*pi
                 cairo_stroke(cr);
+                snprintf(buf, sizeof(buf), "%.2f A", ckt->sources[i].value);
+                draw_Valuelabel(cr, 180, 350, buf);
                 //Current sign
+
                 cairo_move_to(cr, 300, 320);
                 cairo_line_to(cr, 300, 360);
                 cairo_move_to(cr, 300, 320);
@@ -182,11 +213,14 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
         //Source symbol
         for (unsigned i = 0; i < ckt->sourceCount; i++) {
             const CB_Source *s = &ckt->sources[i];
+            char buf[64];
             if (s->type == CB_SRC_VoltageDC) {
                 cairo_arc(cr, 300.0, 340.0, 40.0, 0.0, 6.283185307179586); // 2*pi
                 cairo_stroke(cr);
-
+                snprintf(buf, sizeof(buf), "%.2f V", ckt->sources[i].value);
+                draw_Valuelabel(cr, 180, 350, buf);
                 //Plus Minus signs
+
                 cairo_move_to(cr, 310, 320);
                 cairo_line_to(cr, 290, 320);
                 cairo_move_to(cr, 300, 310);
@@ -198,7 +232,10 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
             else if (s->type == CB_SRC_CurrentDC) {
                 cairo_arc(cr, 300.0, 340.0, 40.0, 0.0, 6.283185307179586); // 2*pi
                 cairo_stroke(cr);
+                snprintf(buf, sizeof(buf), "%.2f A", ckt->sources[i].value);
+                draw_Valuelabel(cr, 180, 350, buf);
 
+                //Current Source
                 cairo_move_to(cr, 300, 320);
                 cairo_line_to(cr, 300, 360);
                 cairo_move_to(cr, 300, 320);
@@ -341,12 +378,15 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
         cairo_stroke(cr);
         for (unsigned i = 0; i < ckt->sourceCount; i++) {
             const CB_Source *s = &ckt->sources[i];
+            char buf[64];
             //Source symbol two - "outter second mesh"
             if (i == 1) {
                 if (s->type == CB_SRC_VoltageDC) {
                     //Voltage Source DC #2
                     cairo_arc(cr, 860.0, 540.0, 40.0, 0.0, 6.283185307179586); // 2*pi
                     cairo_stroke(cr);
+                    snprintf(buf, sizeof(buf), "%.2f V", ckt->sources[i].value);
+                    draw_Valuelabel(cr, 740, 550, buf);
 
                     //Plus/Minus signs two
                     cairo_move_to(cr, 870, 520);
@@ -361,6 +401,8 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
                     //Current Source DC
                     cairo_arc(cr, 860.0, 540.0, 40.0, 0.0, 6.283185307179586); // 2*pi
                     cairo_stroke(cr);
+                    snprintf(buf, sizeof(buf), "%.2f A", ckt->sources[i].value);
+                    draw_Valuelabel(cr, 740, 550, buf);
 
                     cairo_move_to(cr, 860, 520);
                     cairo_line_to(cr, 860, 560);
@@ -377,6 +419,8 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
                 if (s->type == CB_SRC_VoltageDC) {
                     cairo_arc(cr, 300.0, 540.0, 40.0, 0.0, 6.283185307179586); // 2*pi
                     cairo_stroke(cr);
+                    snprintf(buf, sizeof(buf), "%.2f V", ckt->sources[i].value);
+                    draw_Valuelabel(cr, 180, 550, buf);
 
                     //Plus Minus signs
                     cairo_move_to(cr, 310, 520);
@@ -390,6 +434,8 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
                 else if (s->type == CB_SRC_CurrentDC) {
                     cairo_arc(cr, 300.0, 540.0, 40.0, 0.0, 6.283185307179586); // 2*pi
                     cairo_stroke(cr);
+                    snprintf(buf, sizeof(buf), "%.2f A", ckt->sources[i].value);
+                    draw_Valuelabel(cr, 180, 550, buf);
 
                     cairo_move_to(cr, 300, 520);
                     cairo_line_to(cr, 300, 560);
