@@ -49,35 +49,12 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
     if (rateSelect == 1u) {
 
     for (unsigned i = 0; i < ckt->componentCount; i++) {
-
+        cairo_set_source_rgb(cr, 0.1, 0.1, 0.1);
+        cairo_set_line_width(cr, 3.0);
         switch(i) {
             char buf[64];
 
             case 0u: 
-                    // "Wire" - schematic
-                cairo_set_source_rgb(cr, 0.1, 0.1, 0.1);
-                cairo_set_line_width(cr, 3.0);
-                cairo_move_to(cr, 300, 200);
-                cairo_line_to(cr, 400, 200);
-                cairo_stroke(cr);
-
-                snprintf(buf, sizeof(buf), "%.2f Ohms", ckt->components[i].value);
-                draw_Valuelabel(cr, 390, 165, buf);
-                // "Resistor Zig-Zag" - schematic
-                cairo_move_to(cr, 400, 200);
-                cairo_line_to(cr, 410, 185);
-                cairo_line_to(cr, 430, 215);
-                cairo_line_to(cr, 450, 185);
-                cairo_line_to(cr, 470, 215);
-                cairo_line_to(cr, 480, 200);
-                cairo_stroke(cr);
-
-                // "Wire" - schematic
-                cairo_move_to(cr, 480, 200);
-                cairo_line_to(cr, 580, 200);
-                cairo_stroke(cr);
-            break;
-            case 1u:
                         // "Wire" - schematic
                 cairo_move_to(cr, 580, 200);
                 cairo_line_to(cr, 580, 300);
@@ -98,6 +75,29 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
                 cairo_move_to(cr, 580, 380);
                 cairo_line_to(cr, 580, 480);
                 cairo_stroke(cr);
+            break;
+            case 1u:
+                // "Wire" - schematic
+                cairo_move_to(cr, 300, 200);
+                cairo_line_to(cr, 400, 200);
+                cairo_stroke(cr);
+
+                snprintf(buf, sizeof(buf), "%.2f Ohms", ckt->components[i].value);
+                draw_Valuelabel(cr, 390, 165, buf);
+                // "Resistor Zig-Zag" - schematic
+                cairo_move_to(cr, 400, 200);
+                cairo_line_to(cr, 410, 185);
+                cairo_line_to(cr, 430, 215);
+                cairo_line_to(cr, 450, 185);
+                cairo_line_to(cr, 470, 215);
+                cairo_line_to(cr, 480, 200);
+                cairo_stroke(cr);
+
+                // "Wire" - schematic
+                cairo_move_to(cr, 480, 200);
+                cairo_line_to(cr, 580, 200);
+                cairo_stroke(cr);
+                
             break;
 
         }
@@ -160,45 +160,104 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
         cairo_surface_flush(surf);
     }
     else if (rateSelect == 2u) {
-        // "Wire" - schematic
         cairo_set_source_rgb(cr, 0.1, 0.1, 0.1);
         cairo_set_line_width(cr, 3.0);
-        cairo_move_to(cr, 300, 200);
-        cairo_line_to(cr, 400, 200);
-        cairo_stroke(cr);
+        for (unsigned i = 0; i < ckt->componentCount; i++) {
+            switch(i) {
+                char buf[64];
+                case 0u: 
+                    cairo_move_to(cr, 300, 200);
+                    cairo_line_to(cr, 400, 200);
+                    cairo_stroke(cr);
+                    //Comp [0]
+                    // "Resistor Zig-Zag" - schematic
+                    snprintf(buf, sizeof(buf), "%.2f Ohms", ckt->components[i].value);
+                    draw_Valuelabel(cr, 390, 165, buf);
+                    cairo_move_to(cr, 400, 200);
+                    cairo_line_to(cr, 410, 185);
+                    cairo_line_to(cr, 430, 215);
+                    cairo_line_to(cr, 450, 185);
+                    cairo_line_to(cr, 470, 215);
+                    cairo_line_to(cr, 480, 200);
+                    cairo_stroke(cr);
 
-        // "Resistor Zig-Zag" - schematic
-        cairo_move_to(cr, 400, 200);
-        cairo_line_to(cr, 410, 185);
-        cairo_line_to(cr, 430, 215);
-        cairo_line_to(cr, 450, 185);
-        cairo_line_to(cr, 470, 215);
-        cairo_line_to(cr, 480, 200);
-        cairo_stroke(cr);
+                    // "Wire" - schematic
+                    cairo_move_to(cr, 480, 200);
+                    cairo_line_to(cr, 580, 200);
+                    cairo_stroke(cr);
+                break;
+                case 1u:
+                    // "Wire" - schematic
+                    cairo_move_to(cr, 580, 200);
+                    cairo_line_to(cr, 580, 300);
+                    cairo_stroke(cr);
+                    //Comp [1]
+                    // "Resistor zig zag" 
+                    snprintf(buf, sizeof(buf), "%.2f Ohms", ckt->components[i].value);
+                    draw_Valuelabel(cr, 425, 340, buf);
+                    cairo_move_to(cr, 580, 300);
+                    cairo_line_to(cr, 595, 310);
+                    cairo_line_to(cr, 565, 330);
+                    cairo_line_to(cr, 595, 350);
+                    cairo_line_to(cr, 565, 370);
+                    cairo_line_to(cr, 580, 380);
+                    cairo_stroke(cr);
 
-        // "Wire" - schematic
-        cairo_move_to(cr, 480, 200);
-        cairo_line_to(cr, 580, 200);
-        cairo_stroke(cr);
+                    // Wire - below 2nd Resistor
+                    cairo_move_to(cr, 580, 380);
+                    cairo_line_to(cr, 580, 480);
+                    cairo_stroke(cr);
+                break;
+                case 2u:
+                    //Start of second Mesh loop 
+                    cairo_move_to(cr, 580, 200);
+                    cairo_line_to(cr, 680, 200);
+                    cairo_stroke(cr);
+                    //Comp [2]
+                    //Second mesh top resistor 
+                    snprintf(buf, sizeof(buf), "%.2f Ohms", ckt->components[i].value);
+                    draw_Valuelabel(cr, 670, 165, buf);
+                    cairo_move_to(cr, 680, 200);
+                    cairo_line_to(cr, 690, 185);
+                    cairo_line_to(cr, 710, 215);
+                    cairo_line_to(cr, 730, 185);
+                    cairo_line_to(cr, 750, 215);
+                    cairo_line_to(cr, 760, 200);
+                    cairo_stroke(cr);
 
-        // "Wire" - schematic
-        cairo_move_to(cr, 580, 200);
-        cairo_line_to(cr, 580, 300);
-        cairo_stroke(cr);
+                    //Second Mesh top right wire
+                    cairo_move_to(cr, 760, 200);
+                    cairo_line_to(cr, 860, 200);
+                    cairo_stroke(cr);
+                break;
+                case 3u:
+                    //Second Mesh outside wall
+                    cairo_move_to(cr, 860, 200);
+                    cairo_line_to(cr, 860, 300);
+                    cairo_stroke(cr);
+                    //Comp [3]
+                    //Resistor "outter second mesh"
+                    snprintf(buf, sizeof(buf), "%.2f Ohms", ckt->components[i].value);
+                    draw_Valuelabel(cr, 705, 340, buf);
+                    cairo_move_to(cr, 860, 300);
+                    cairo_line_to(cr, 875, 310);
+                    cairo_line_to(cr, 845, 330);
+                    cairo_line_to(cr, 875, 350);
+                    cairo_line_to(cr, 845, 370);
+                    cairo_line_to(cr, 860, 380);
+                    cairo_stroke(cr);
 
-        // "Resistor zig zag" 
-        cairo_move_to(cr, 580, 300);
-        cairo_line_to(cr, 595, 310);
-        cairo_line_to(cr, 565, 330);
-        cairo_line_to(cr, 595, 350);
-        cairo_line_to(cr, 565, 370);
-        cairo_line_to(cr, 580, 380);
-        cairo_stroke(cr);
+                    //Bottom wire - Second mesh outter branch
+                    cairo_move_to(cr, 860, 380);
+                    cairo_line_to(cr, 860, 480);
+                    cairo_stroke(cr);
+                break;
+            }
+        }
+       
+        
 
-        // Wire - below 2nd Resistor
-        cairo_move_to(cr, 580, 380);
-        cairo_line_to(cr, 580, 480);
-        cairo_stroke(cr);
+        
 
         //GND Point - bottom of Voltage divider
         cairo_move_to(cr, 580, 480);
@@ -218,7 +277,7 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
                 cairo_arc(cr, 300.0, 340.0, 40.0, 0.0, 6.283185307179586); // 2*pi
                 cairo_stroke(cr);
                 snprintf(buf, sizeof(buf), "%.2f V", ckt->sources[i].value);
-                draw_Valuelabel(cr, 180, 350, buf);
+                draw_Valuelabel(cr, 180, 340, buf);
                 //Plus Minus signs
 
                 cairo_move_to(cr, 310, 320);
@@ -233,7 +292,7 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
                 cairo_arc(cr, 300.0, 340.0, 40.0, 0.0, 6.283185307179586); // 2*pi
                 cairo_stroke(cr);
                 snprintf(buf, sizeof(buf), "%.2f A", ckt->sources[i].value);
-                draw_Valuelabel(cr, 180, 350, buf);
+                draw_Valuelabel(cr, 180, 340, buf);
 
                 //Current Source
                 cairo_move_to(cr, 300, 320);
@@ -250,43 +309,6 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
         cairo_line_to(cr, 300, 200);
         cairo_stroke(cr);
 
-        //Start of second Mesh loop 
-        cairo_move_to(cr, 580, 200);
-        cairo_line_to(cr, 680, 200);
-        cairo_stroke(cr);
-
-        //Second mesh top resistor 
-        cairo_move_to(cr, 680, 200);
-        cairo_line_to(cr, 690, 185);
-        cairo_line_to(cr, 710, 215);
-        cairo_line_to(cr, 730, 185);
-        cairo_line_to(cr, 750, 215);
-        cairo_line_to(cr, 760, 200);
-        cairo_stroke(cr);
-
-        //Second Mesh top right wire
-        cairo_move_to(cr, 760, 200);
-        cairo_line_to(cr, 860, 200);
-        cairo_stroke(cr);
-
-        //Second Mesh outside wall
-        cairo_move_to(cr, 860, 200);
-        cairo_line_to(cr, 860, 300);
-        cairo_stroke(cr);
-
-        //Resistor "outter second mesh"
-        cairo_move_to(cr, 860, 300);
-        cairo_line_to(cr, 845, 310);
-        cairo_line_to(cr, 875, 330);
-        cairo_line_to(cr, 845, 350);
-        cairo_line_to(cr, 875, 370);
-        cairo_line_to(cr, 860, 380);
-        cairo_stroke(cr);
-
-        //Bottom wire - Second mesh outter branch
-        cairo_move_to(cr, 860, 380);
-        cairo_line_to(cr, 860, 480);
-        cairo_stroke(cr);
 
         //GND rail Wire - Second Mesh
         cairo_move_to(cr, 860, 480);
@@ -296,45 +318,148 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
        
     }
     else if (rateSelect == 3u) {
-        // "Wire" - schematic
         cairo_set_source_rgb(cr, 0.1, 0.1, 0.1);
         cairo_set_line_width(cr, 3.0);
-        cairo_move_to(cr, 300, 400);
-        cairo_line_to(cr, 400, 400);
-        cairo_stroke(cr);
 
-        // "Resistor Zig-Zag" - schematic
-        cairo_move_to(cr, 400, 400);
-        cairo_line_to(cr, 410, 385);
-        cairo_line_to(cr, 430, 415);
-        cairo_line_to(cr, 450, 385);
-        cairo_line_to(cr, 470, 415);
-        cairo_line_to(cr, 480, 400);
-        cairo_stroke(cr);
+        for (unsigned i = 0; i < ckt->componentCount; i++) {
+            switch(i){
+                char buf[64];
+                case 0u:
+                    cairo_move_to(cr, 300, 400);
+                    cairo_line_to(cr, 400, 400);
+                    cairo_stroke(cr);
+                    
+                    // "Resistor Zig-Zag" - schematic
+                    snprintf(buf, sizeof(buf), "%.2f Ohms", ckt->components[i].value);
+                    draw_Valuelabel(cr, 390, 365, buf);
+                    cairo_move_to(cr, 400, 400);
+                    cairo_line_to(cr, 410, 385);
+                    cairo_line_to(cr, 430, 415);
+                    cairo_line_to(cr, 450, 385);
+                    cairo_line_to(cr, 470, 415);
+                    cairo_line_to(cr, 480, 400);
+                    cairo_stroke(cr);
 
-        // "Wire" - schematic
-        cairo_move_to(cr, 480, 400);
-        cairo_line_to(cr, 580, 400);
-        cairo_stroke(cr);
+                    // "Wire" - schematic
+                    cairo_move_to(cr, 480, 400);
+                    cairo_line_to(cr, 580, 400);
+                    cairo_stroke(cr);
+                break;
+                case 1u:
+                    // "Wire" - schematic
+                    cairo_move_to(cr, 580, 400);
+                    cairo_line_to(cr, 580, 500);
+                    cairo_stroke(cr);
 
-        // "Wire" - schematic
-        cairo_move_to(cr, 580, 400);
-        cairo_line_to(cr, 580, 500);
-        cairo_stroke(cr);
+                    // "Resistor zig zag" 
+                    snprintf(buf, sizeof(buf), "%.2f Ohms", ckt->components[i].value);
+                    draw_Valuelabel(cr, 425, 540, buf);
+                    cairo_move_to(cr, 580, 500);
+                    cairo_line_to(cr, 595, 510);
+                    cairo_line_to(cr, 565, 530);
+                    cairo_line_to(cr, 595, 550);
+                    cairo_line_to(cr, 565, 570);
+                    cairo_line_to(cr, 580, 580);
+                    cairo_stroke(cr);
 
-        // "Resistor zig zag" 
-        cairo_move_to(cr, 580, 500);
-        cairo_line_to(cr, 595, 510);
-        cairo_line_to(cr, 565, 530);
-        cairo_line_to(cr, 595, 550);
-        cairo_line_to(cr, 565, 570);
-        cairo_line_to(cr, 580, 580);
-        cairo_stroke(cr);
+                    // Wire - below 2nd Resistor
+                    cairo_move_to(cr, 580, 580);
+                    cairo_line_to(cr, 580, 680);
+                    cairo_stroke(cr);
+                break;
+                case 2u:
+                    //Start of second Mesh loop 
+                    cairo_move_to(cr, 580, 400);
+                    cairo_line_to(cr, 680, 400);
+                    cairo_stroke(cr);
 
-        // Wire - below 2nd Resistor
-        cairo_move_to(cr, 580, 580);
-        cairo_line_to(cr, 580, 680);
-        cairo_stroke(cr);
+                    //Second mesh top resistor 
+                    snprintf(buf, sizeof(buf), "%.2f Ohms", ckt->components[i].value);
+                    draw_Valuelabel(cr, 670, 365, buf);
+                    cairo_move_to(cr, 680, 400);
+                    cairo_line_to(cr, 690, 385);
+                    cairo_line_to(cr, 710, 415);
+                    cairo_line_to(cr, 730, 385);
+                    cairo_line_to(cr, 750, 415);
+                    cairo_line_to(cr, 760, 400);
+                    cairo_stroke(cr);
+
+                    //Second Mesh top right wire
+                    cairo_move_to(cr, 760, 400);
+                    cairo_line_to(cr, 860, 400);
+                    cairo_stroke(cr);
+                break;
+                case 3u:
+                    //Top Mesh Right wall top wire
+                    cairo_move_to(cr, 860, 120);
+                    cairo_line_to(cr, 860, 220);
+                    cairo_stroke(cr);
+
+                    //Top Mesh right wall resistor
+                    snprintf(buf, sizeof(buf), "%.2f Ohms", ckt->components[i].value);
+                    draw_Valuelabel(cr, 705, 260, buf);
+                    cairo_move_to(cr, 860, 220);
+                    cairo_line_to(cr, 875, 230);
+                    cairo_line_to(cr, 845, 250);
+                    cairo_line_to(cr, 875, 270);
+                    cairo_line_to(cr, 845, 290);
+                    cairo_line_to(cr, 860, 300);
+                    cairo_stroke(cr);
+
+                    //Top mesh right wall bottom wire
+                    cairo_move_to(cr, 860, 300);
+                    cairo_line_to(cr, 860, 400);
+                    cairo_stroke(cr);
+                break;
+                case 4u:
+                    //Top wall Left wire
+                    cairo_move_to(cr, 580, 120);
+                    cairo_line_to(cr, 680, 120);
+                    cairo_stroke(cr);
+
+                    //Top resistor top mesh
+                    snprintf(buf, sizeof(buf), "%.2f Ohms", ckt->components[i].value);
+                    draw_Valuelabel(cr, 670, 85, buf);
+                    cairo_move_to(cr, 680, 120);
+                    cairo_line_to(cr, 690, 105);
+                    cairo_line_to(cr, 710, 135);
+                    cairo_line_to(cr, 730, 105);
+                    cairo_line_to(cr, 750, 135);
+                    cairo_line_to(cr, 760, 120);
+                    cairo_stroke(cr);
+
+                    //Top mesh Top right wire
+                    cairo_move_to(cr, 760, 120);
+                    cairo_line_to(cr, 860, 120);
+                    cairo_stroke(cr);
+                break;
+                case 5u:
+                     //Start of Top mesh
+                    cairo_move_to(cr, 580, 400);
+                    cairo_line_to(cr, 580, 300);
+                    cairo_stroke(cr);
+
+                    //First left wall Resistor
+                    snprintf(buf, sizeof(buf), "%.2f Ohms", ckt->components[i].value);
+                    draw_Valuelabel(cr, 425, 260, buf);
+                    cairo_move_to(cr, 580, 300);
+                    cairo_line_to(cr, 565, 290);
+                    cairo_line_to(cr, 595, 270);
+                    cairo_line_to(cr, 565, 250);
+                    cairo_line_to(cr, 595, 230);
+                    cairo_line_to(cr, 580, 220);
+                    cairo_stroke(cr);
+                    
+                    //Left wall top wire
+                    cairo_move_to(cr, 580, 220);
+                    cairo_line_to(cr, 580, 120);
+                    cairo_stroke(cr);
+                break;
+            }
+        }
+        
+
+        
 
         //GND Point - bottom of Voltage divider
         cairo_move_to(cr, 580, 680);
@@ -346,31 +471,12 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
         cairo_line_to(cr, 300, 580);
         cairo_stroke(cr);
 
-        
-
         //Wire above Voltage source
         cairo_move_to(cr, 300, 500);
         cairo_line_to(cr, 300, 400);
         cairo_stroke(cr);
 
-        //Start of second Mesh loop 
-        cairo_move_to(cr, 580, 400);
-        cairo_line_to(cr, 680, 400);
-        cairo_stroke(cr);
-
-        //Second mesh top resistor 
-        cairo_move_to(cr, 680, 400);
-        cairo_line_to(cr, 690, 385);
-        cairo_line_to(cr, 710, 415);
-        cairo_line_to(cr, 730, 385);
-        cairo_line_to(cr, 750, 415);
-        cairo_line_to(cr, 760, 400);
-        cairo_stroke(cr);
-
-        //Second Mesh top right wire
-        cairo_move_to(cr, 760, 400);
-        cairo_line_to(cr, 860, 400);
-        cairo_stroke(cr);
+        
 
         //Second Mesh outside wall
         cairo_move_to(cr, 860, 400);
@@ -386,7 +492,7 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
                     cairo_arc(cr, 860.0, 540.0, 40.0, 0.0, 6.283185307179586); // 2*pi
                     cairo_stroke(cr);
                     snprintf(buf, sizeof(buf), "%.2f V", ckt->sources[i].value);
-                    draw_Valuelabel(cr, 740, 550, buf);
+                    draw_Valuelabel(cr, 740, 540, buf);
 
                     //Plus/Minus signs two
                     cairo_move_to(cr, 870, 520);
@@ -402,7 +508,7 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
                     cairo_arc(cr, 860.0, 540.0, 40.0, 0.0, 6.283185307179586); // 2*pi
                     cairo_stroke(cr);
                     snprintf(buf, sizeof(buf), "%.2f A", ckt->sources[i].value);
-                    draw_Valuelabel(cr, 740, 550, buf);
+                    draw_Valuelabel(cr, 740, 540, buf);
 
                     cairo_move_to(cr, 860, 520);
                     cairo_line_to(cr, 860, 560);
@@ -420,7 +526,7 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
                     cairo_arc(cr, 300.0, 540.0, 40.0, 0.0, 6.283185307179586); // 2*pi
                     cairo_stroke(cr);
                     snprintf(buf, sizeof(buf), "%.2f V", ckt->sources[i].value);
-                    draw_Valuelabel(cr, 180, 550, buf);
+                    draw_Valuelabel(cr, 180, 540, buf);
 
                     //Plus Minus signs
                     cairo_move_to(cr, 310, 520);
@@ -435,7 +541,7 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
                     cairo_arc(cr, 300.0, 540.0, 40.0, 0.0, 6.283185307179586); // 2*pi
                     cairo_stroke(cr);
                     snprintf(buf, sizeof(buf), "%.2f A", ckt->sources[i].value);
-                    draw_Valuelabel(cr, 180, 550, buf);
+                    draw_Valuelabel(cr, 180, 540, buf);
 
                     cairo_move_to(cr, 300, 520);
                     cairo_line_to(cr, 300, 560);
@@ -457,62 +563,11 @@ int BaseGUI_Run(CB_Ckt *ckt, unsigned nodeCount) {
         cairo_line_to(cr, 580, 680);
         cairo_stroke(cr);
 
-        //Start of Top mesh
-        cairo_move_to(cr, 580, 400);
-        cairo_line_to(cr, 580, 300);
-        cairo_stroke(cr);
+       
 
-        //First left wall Resistor
-        cairo_move_to(cr, 580, 300);
-        cairo_line_to(cr, 565, 290);
-        cairo_line_to(cr, 595, 270);
-        cairo_line_to(cr, 565, 250);
-        cairo_line_to(cr, 595, 230);
-        cairo_line_to(cr, 580, 220);
-        cairo_stroke(cr);
         
-        //Left wall top wire
-        cairo_move_to(cr, 580, 220);
-        cairo_line_to(cr, 580, 120);
-        cairo_stroke(cr);
 
-        //Top wall Left wire
-        cairo_move_to(cr, 580, 120);
-        cairo_line_to(cr, 680, 120);
-        cairo_stroke(cr);
-
-        //Top resistor top mesh
-        cairo_move_to(cr, 680, 120);
-        cairo_line_to(cr, 690, 105);
-        cairo_line_to(cr, 710, 135);
-        cairo_line_to(cr, 730, 105);
-        cairo_line_to(cr, 750, 135);
-        cairo_line_to(cr, 760, 120);
-        cairo_stroke(cr);
-
-        //Top mesh Top right wire
-        cairo_move_to(cr, 760, 120);
-        cairo_line_to(cr, 860, 120);
-        cairo_stroke(cr);
-
-        //Top Mesh Right wall top wire
-        cairo_move_to(cr, 860, 120);
-        cairo_line_to(cr, 860, 220);
-        cairo_stroke(cr);
-
-        //Top Mesh right wall resistor
-        cairo_move_to(cr, 860, 220);
-        cairo_line_to(cr, 875, 230);
-        cairo_line_to(cr, 845, 250);
-        cairo_line_to(cr, 875, 270);
-        cairo_line_to(cr, 845, 290);
-        cairo_line_to(cr, 860, 300);
-        cairo_stroke(cr);
-
-        //Top mesh right wall bottom wire
-        cairo_move_to(cr, 860, 300);
-        cairo_line_to(cr, 860, 400);
-        cairo_stroke(cr);
+        
 
     }
     else {
