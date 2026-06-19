@@ -27,18 +27,68 @@ memset(result, 0, sizeof(*result));
     //One unknown node/Two total - Difficulty base is 0
     if (out->nodeCount == 1u) {
         for (unsigned i = 0; i < rCount; i++) {
-            result->rh[i] = out->components[i].value;
-        }
-        for (unsigned i = 0; i < sCount; i++) {
-            result->cn[i] = out->sources[i].value;
-        }
-        for (unsigned i = 0; i < sumHoldMax && i + 1 < rCount && i < sCount; i++) {
-            if (result->rh[i] == 0) {
+            switch(out->opts.genre) {
+                case CB_G_dcSteady:
+                    result->rh[i] = out->components[i].value;
+                    result->irh[i] = out->components[i].imag;
+                break;
+                case CB_G_AcDcSinusoidal:
+                    result->rh[i] = out->components[i].value;
+                    result->irh[i] = out->components[i].imag;
+                break;
+                case CB_G_AcSinusoidal:
+                    result->rh[i] = out->components[i].value;
+                    result->irh[i] = out->components[i].imag;
                 break;
             }
-            double den = result->rh[i] + result->rh[i + 1];
-            if (den == 0.0) break;
-            result->summer[i] = result->cn[i] * (result->rh[i] / den);
+            
+        }
+        for (unsigned i = 0; i < sCount; i++) {
+            switch(out->opts.genre) {
+                case CB_G_dcSteady:
+                    result->cn[i] = out->sources[i].value;
+                    result->ich[i] = out->sources[i].imag;
+                break;
+                case CB_G_AcDcSinusoidal:
+                    result->cn[i] = out->sources[i].value;
+                    result->ich[i] = out->sources[i].imag;
+                break;
+                case CB_G_AcSinusoidal:
+                    result->cn[i] = out->sources[i].value;
+                    result->ich[i] = out->sources[i].imag;
+                break;
+            }
+        }
+        for (unsigned i = 0;((i < sumHoldMax) && (i + 1 < rCount && i < sCount)); i++) {
+            switch(out->opts.genre) {
+                case CB_G_dcSteady:
+                    if (out->sources[i].type == CB_SRC_VoltageDC) {
+                        if (result->rh[i] == 0) {
+                            break;
+                        }
+                        double den = result->rh[i] + result->rh[i + 1];
+                        if (den == 0.0) break;
+                            result->summer[i] = result->cn[i] * (result->rh[i] / den);
+                        }
+                    else if (out->sources[i].type == CB_SRC_CurrentDC) {
+                        if (result->rh[i] == 0) {
+                            break;
+                        }
+                        double den = result->rh[i + 1];
+                        if (den == 0.0) break;
+                            result->summer[i] = den * result->cn[i];
+                    }
+                break;
+                case CB_G_AcDcSinusoidal:
+                    
+                break;
+                case CB_G_AcSinusoidal:
+
+                break;
+                    
+                
+            
+            }
         }
     }
     else if (out->nodeCount == 2u) { 

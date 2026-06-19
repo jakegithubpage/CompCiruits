@@ -159,7 +159,7 @@ int DC_Build_FromOut(const CB_Ckt *out)
     //fail if null entrys arrive
     if (out == NULL) return 0;
     if (out->nodeCount < 1u) return 0;
-    
+    printf("cp1");
     /* count voltage sources from out->sources*/
     for (sourceIndex = 0; sourceIndex < out->sourceCount; sourceIndex++) {
         if (out->sources[sourceIndex].type < 0) return 0;
@@ -169,31 +169,33 @@ int DC_Build_FromOut(const CB_Ckt *out)
 
         voltageSourceCount++;
     }
-    
+    printf("cp2");
     //Return if bad allocation
     if (!dc_allocate(out->nodeCount, voltageSourceCount)) return 0;
     
+    printf("cp3");
     //Set latestDC specs for printing
     latestDcMatrix.totalNodeCount = out->nodeCount;
     latestDcMatrix.sourceCount = voltageSourceCount;
     latestDcMatrix.componentCount = out->componentCount;
     
+    printf("cp4");
     for (componentIndex = 0u; componentIndex < out->componentCount; componentIndex++) {
         //const CB_Component *component = &out->components[componentIndex];
-
-        if (out->components[componentIndex].type != CB_COMP_Resistor) return 0;
+        if (out->components[componentIndex].type < 0.0) return 0;
         if (out->components[componentIndex].value <= 0.0) return 0;
-        
+        printf("cp4.5");
         if (!stamp_Resistor(out->components[componentIndex].n1, out->components[componentIndex].n2, out->components[componentIndex].value)) return 0;
+        printf("cp4.6");
     }
-    
+    printf("cp5");
     for (sourceIndex = 0u; sourceIndex < out->sourceCount; sourceIndex++) {
         const CB_Source *source = &out->sources[sourceIndex];
         
         if (!stamp_VoltageSource(source->nPlus, source->nMinus, source->value, voltageSourceStampIndex)) return 0;
         voltageSourceStampIndex++;
     }
-    
+    printf("cp6");
     return 1;
 }
 

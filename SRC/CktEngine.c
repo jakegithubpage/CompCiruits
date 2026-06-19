@@ -209,7 +209,7 @@ static void assign_genreBase_Source(CB_Genre genre, CB_Source *s) {
          }
          else {
              s->type = CB_SRC_CurrentDC;
-             s->value = rand_range_double(1.0, 50.0);
+             s->value = rand_range_double(1.0, 10.0);
              s->imag = 0.0;
          }
       break;
@@ -221,7 +221,7 @@ static void assign_genreBase_Source(CB_Genre genre, CB_Source *s) {
             }
             else {
                s->type = CB_SRC_CurrentDC;
-               s->value = rand_range_double(1.0, 50.0);
+               s->value = rand_range_double(1.0, 10.0);
                s->imag = 0.0;
             }
       break;
@@ -233,7 +233,7 @@ static void assign_genreBase_Source(CB_Genre genre, CB_Source *s) {
          }
          else {
             s->type = CB_SRC_CurrentAC;
-            s->value = rand_range_double(1.0, 50.0);
+            s->value = rand_range_double(1.0, 10.0);
             s->imag = rand_range_double(-500.0, 500.0);
          }
       break;

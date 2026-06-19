@@ -21,7 +21,7 @@ EVENTUALLY: Add a ranking system into main work flow, Use prompt answers, store 
 Rank the circuit, then store and output difficulty calculated to user in work flow.
 */
 
-
+//Setting functions with switch handling
 static const char* diff_name(CB_difficulty d) {
    switch (d) {
       case CB_DIFF_Easy: return "Easy";
