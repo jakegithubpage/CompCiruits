@@ -93,64 +93,229 @@ memset(result, 0, sizeof(*result));
     }
     else if (out->nodeCount == 2u) { 
             for (unsigned i = 0; i < rCount; i++) {
-            result->rh[i] = out->components[i].value;
+                switch(out->opts.genre) {
+                    case CB_G_dcSteady:
+                        result->rh[i] = out->components[i].value;
+                        result->irh[i] = out->components[i].imag;
+                    break;
+                    case CB_G_AcDcSinusoidal:
+                        result->rh[i] = out->components[i].value;
+                        result->irh[i] = out->components[i].imag;
+                    break;
+                    case CB_G_AcSinusoidal:
+                        result->rh[i] = out->components[i].value;
+                        result->irh[i] = out->components[i].imag;
+                    break;
+                }
+            
             }
             for (unsigned i = 0; i < sCount; i++) {
-            result->cn[i] = (int)out->sources[i].value;
-            }
-                /*
-                Coding in if statement that depends on C and S count, 
-                This will be helpful when difficulty component count can range
-                */
-                if (rCount >= 4u && sCount >= 1u) { 
-                    double den = ((1 / result->rh[2]) + (1 / (result->rh[0] + result->rh[1])) + (1 / result->rh[3]));
-        
-                    if (den != 0.0) { 
-                        result->summer[0] = (result->cn[0] / result->rh[3]) / den;
-                        double den2 = result->rh[0] + result->rh[1];
-
-                        if (den2 != 0.0) {
-                                result->summer[1] = result->summer[0] * (result->rh[0] / den2);
-                        }
-                    }
+                switch(out->opts.genre) {
+                    case CB_G_dcSteady:
+                        result->cn[i] = out->sources[i].value;
+                        result->ich[i] = out->sources[i].imag;
+                    break;
+                    case CB_G_AcDcSinusoidal:
+                        result->cn[i] = out->sources[i].value;
+                        result->ich[i] = out->sources[i].imag;
+                    break;
+                    case CB_G_AcSinusoidal:
+                        result->cn[i] = out->sources[i].value;
+                        result->ich[i] = out->sources[i].imag;
+                    break;
                 }
+            }
+
+    for (unsigned i = 0;((i < sumHoldMax) && (i + 1 < rCount && i < sCount)); i++) {
+        switch(out->opts.genre) {
+            case CB_G_dcSteady:
+                if (result->rh[i] == 0) break;
+                        
+                if(out->components[i].type == CB_SRC_VoltageDC) { 
+                    double den = ((1 / result->rh[2]) + (1 / (result->rh[0] + result->rh[1])) + (1 / result->rh[3]));
+                    if (den == 0.0) break;
+                    result->summer[0] = (result->cn[0] / result->rh[3]) / den;
+                    double den2 = result->rh[0] + result->rh[1];
+                    if (den2 != 0.0) break;
+                    result->summer[1] = result->summer[0] * (result->rh[0] / den2);
+                }
+                else if (out->components[i].type == CB_SRC_CurrentDC) {
+                    double den = (result->rh[3] + result->rh[2] + result->rh[1]);
+                    if (den == 0.0) break;
+                    result->summer[0] = ((result->rh[1] * result->rh[3]) / den) * result->cn[0];
+                    result->summer[1] = ((result->rh[1] * (result->rh[2] + result->rh[3])) / den) * result->cn[0];
+
+
+                }
+            break;
+            case CB_G_AcDcSinusoidal:
+
+            break;
+            case CB_G_AcSinusoidal:
+
+            break;
+        }
+    }
+                
     }
     else if (out->nodeCount == 3u) {
-        for (unsigned i = 0; i < rCount; i++) {
-            result->rh[i] = out->components[i].value;
-        }
-        for (unsigned i = 0; i < sCount; i++) {
-            result->cn[i] = out->sources[i].value;
-        }
-            if (rCount >= 6 && sCount >= 2) {
-                double v2num = (result->cn[0] / result->rh[0]) + (result->cn[1] * ((1 / result->rh[2]) + (1 / (result->rh[5] + result->rh[4] + result->rh[3]))));
-                double v2den = ((1 / result->rh[0]) + (1 / result->rh[1]) + (1 / result->rh[2]) + (1 / (result->rh[5] + result->rh[4] + result->rh[3])));
-                double v2 = v2num / v2den;
-
-                if (v2 != 0.0) {
-                    result->summer[0] = v2num / v2den;
-                    double v4num = ((v2 / result->rh[5]) + (result->cn[1] / (result->rh[4] + result->rh[3])));
-                    double v4den = ((1 / result->rh[5]) + (1 / (result->rh[4] + result->rh[3])));
-                    double v4 = v4num / v4den;
-
-                    if (v4 != 0.0) {
-                        result->summer[1] = v4num / v4den;
-                        double v5num = (v4 / result->rh[4]) + (result->cn[1] / result->rh[3]);
-                        double v5den = ((1 / result->rh[4]) + (1 / result->rh[3]));
-                        double v5 = v5num / v5den;
-
-                        if (v5 != 0.0) { 
-                            result->summer[2] = v5num / v5den;
-                        }
-                    }
+            for (unsigned i = 0; i < rCount; i++) {
+                switch(out->opts.genre) {
+                    case CB_G_dcSteady:
+                        result->rh[i] = out->components[i].value;
+                        result->irh[i] = out->components[i].imag;
+                    break;
+                    case CB_G_AcDcSinusoidal:
+                        result->rh[i] = out->components[i].value;
+                        result->irh[i] = out->components[i].imag;
+                    break;
+                    case CB_G_AcSinusoidal:
+                        result->rh[i] = out->components[i].value;
+                        result->irh[i] = out->components[i].imag;
+                    break;
+                }
+                
+            }
+            for (unsigned i = 0; i < sCount; i++) {
+                switch(out->opts.genre) {
+                    case CB_G_dcSteady:
+                        result->cn[i] = out->sources[i].value;
+                        result->ich[i] = out->sources[i].imag;
+                    break;
+                    case CB_G_AcDcSinusoidal:
+                        result->cn[i] = out->sources[i].value;
+                        result->ich[i] = out->sources[i].imag;
+                    break;
+                    case CB_G_AcSinusoidal:
+                        result->cn[i] = out->sources[i].value;
+                        result->ich[i] = out->sources[i].imag;
+                    break;
                 }
             }
-    }
-    else {
-        return;
-    }
+            
 
-}
+
+            switch(out->opts.genre) {
+                case CB_G_dcSteady:
+                        if (out->sources[0].type == CB_SRC_VoltageDC && out->sources[0].type == CB_SRC_VoltageDC) {
+                            if (rCount >= 6 && sCount >= 2) {
+                                double v2num = (result->cn[0] / result->rh[0]) + (result->cn[1] * ((1 / result->rh[2]) + (1 / (result->rh[5] + result->rh[4] + result->rh[3]))));
+                                double v2den = ((1 / result->rh[0]) + (1 / result->rh[1]) + (1 / result->rh[2]) + (1 / (result->rh[5] + result->rh[4] + result->rh[3])));
+                                double v2 = v2num / v2den;
+
+                            if (v2 != 0.0) {
+                                result->summer[0] = v2num / v2den;
+                                double v4num = ((v2 / result->rh[5]) + (result->cn[1] / (result->rh[4] + result->rh[3])));
+                                double v4den = ((1 / result->rh[5]) + (1 / (result->rh[4] + result->rh[3])));
+                                double v4 = v4num / v4den;
+
+                            if (v4 != 0.0) {
+                                result->summer[1] = v4num / v4den;
+                                double v5num = (v4 / result->rh[4]) + (result->cn[1] / result->rh[3]);
+                                double v5den = ((1 / result->rh[4]) + (1 / result->rh[3]));
+                                double v5 = v5num / v5den;
+
+                            if (v5 != 0.0) { 
+                                    result->summer[2] = v5num / v5den;
+                            }
+                        }
+                        }
+                    }
+                        }
+                        else if (out->sources[0].type == CB_SRC_CurrentDC && out->sources[1].type == CB_SRC_CurrentDC) {
+
+                            result->summer[0] = result->rh[1] * (result->cn[0] + result->cn[1]);
+                            double foo = (result->rh[1] * (result->cn[0] + result->cn[1]));
+                            result->summer[1] = (foo - (result->rh[5] * result->cn[1]));
+                            double foo1 = (result->rh[1] * (result->cn[0] + result->cn[1]));
+                            double foo2 = (result->cn[1] * (result->rh[4] - result->rh[5]));
+                            result->summer[2] = foo1 - foo2;
+                        }
+                        else if (out->sources[0].type == CB_SRC_CurrentDC && out->sources[1].type == CB_SRC_VoltageDC) {
+                            double D, V2, V4, V5;
+                               D =
+                                    result->rh[1]*result->rh[2]
+                                + result->rh[1]*result->rh[3]
+                                - result->rh[1]*result->rh[4]
+                                - result->rh[1]*result->rh[5]
+                                - result->rh[2]*result->rh[3]
+                                + result->rh[2]*result->rh[4]
+                                + result->rh[2]*result->rh[5];
+
+                            V2 = (result->rh[1] *
+                                    (
+                                        -result->cn[0]*result->rh[2]*result->rh[3]
+                                        + result->cn[0]*result->rh[2]*result->rh[4]
+                                        + result->cn[0]*result->rh[2]*result->rh[5]
+                                        + result->rh[2]*result->cn[1]
+                                        + result->rh[3]*result->cn[1]
+                                        - result->rh[4]*result->cn[1]
+                                        - result->rh[5]*result->cn[1]
+                                    )
+                                ) / D;
+
+                            V4 = (
+                                    -result->cn[0]*result->rh[1]*result->rh[2]*result->rh[3]
+                                    + result->cn[0]*result->rh[1]*result->rh[2]*result->rh[4]
+                                    + result->rh[1]*result->rh[2]*result->cn[1]
+                                    + result->rh[1]*result->rh[3]*result->cn[1]
+                                    - result->rh[1]*result->rh[4]*result->cn[1]
+                                    - result->rh[1]*result->rh[5]*result->cn[1]
+                                    + result->rh[2]*result->rh[5]*result->cn[1]
+                                ) / D;
+                            V5 = (
+                                    -result->cn[0]*result->rh[1]*result->rh[2]*result->rh[3]
+                                    + result->rh[1]*result->rh[2]*result->cn[1]
+                                    + result->rh[1]*result->rh[3]*result->cn[1]
+                                    - result->rh[1]*result->rh[4]*result->cn[1]
+                                    - result->rh[1]*result->rh[5]*result->cn[1]
+                                    + result->rh[2]*result->rh[4]*result->cn[1]
+                                    + result->rh[2]*result->rh[5]*result->cn[1]
+                                ) / D;
+                            result->summer[0] = V2;
+                            result->summer[1] = V4;
+                            result->summer[2] = V5;
+
+                        }
+                        else if (out->sources[0].type == CB_SRC_VoltageDC && out->sources[1].type == CB_SRC_CurrentDC) {
+                            
+                            double D;
+                            D = result->rh[0] - result->rh[1];
+                            
+                            result->summer[0] =
+                                (
+                                    result->rh[1] *
+                                    (
+                                        2.0 * result->cn[1] * result->rh[0]
+                                        - result->cn[0]
+                                    )
+                                ) / D;
+                            result->summer[1] = (2.0 * result->cn[1] * result->rh[0] * result->rh[1]
+                                    + result->cn[1] * result->rh[0] * result->rh[5]
+                                    - result->cn[1] * result->rh[1] * result->rh[5]
+                                    - result->rh[1] * result->cn[0]
+                                ) / D;
+                            result->summer[2] =  (2.0 * result->cn[1] * result->rh[0] * result->rh[1]
+                                    + result->cn[1] * result->rh[0] * result->rh[4]
+                                    + result->cn[1] * result->rh[0] * result->rh[5]
+                                    - result->cn[1] * result->rh[1] * result->rh[4]
+                                    - result->cn[1] * result->rh[1] * result->rh[5]
+                                    - result->rh[1] * result->cn[0]
+                                ) / D;
+                        }
+                break;
+                case CB_G_AcDcSinusoidal:
+
+                break;
+                case CB_G_AcSinusoidal:
+
+                break;  
+            }
+        }
+            
+    }
+    
+
 
 //**NEXT ADD HARD DIFICULTY SOLVE LOGIC**
 //Add solve questionare to main logic then impliment and test in main.c with build flow
