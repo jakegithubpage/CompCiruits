@@ -131,7 +131,7 @@ memset(result, 0, sizeof(*result));
             case CB_G_dcSteady:
                 if (result->rh[i] == 0) break;
                         
-                if(out->components[i].type == CB_SRC_VoltageDC) { 
+                if(out->sources[i].type == CB_SRC_VoltageDC) { 
                     double den = ((1 / result->rh[2]) + (1 / (result->rh[0] + result->rh[1])) + (1 / result->rh[3]));
                     if (den == 0.0) break;
                     result->summer[0] = (result->cn[0] / result->rh[3]) / den;
@@ -139,7 +139,7 @@ memset(result, 0, sizeof(*result));
                     if (den2 != 0.0) break;
                     result->summer[1] = result->summer[0] * (result->rh[0] / den2);
                 }
-                else if (out->components[i].type == CB_SRC_CurrentDC) {
+                else if (out->sources[i].type == CB_SRC_CurrentDC) {
                     double den = (result->rh[3] + result->rh[2] + result->rh[1]);
                     if (den == 0.0) break;
                     result->summer[0] = ((result->rh[1] * result->rh[3]) / den) * result->cn[0];
@@ -197,7 +197,7 @@ memset(result, 0, sizeof(*result));
 
             switch(out->opts.genre) {
                 case CB_G_dcSteady:
-                        if (out->sources[0].type == CB_SRC_VoltageDC && out->sources[0].type == CB_SRC_VoltageDC) {
+                        if (((out->sources[0].type == CB_SRC_VoltageDC) && (out->sources[0].type == CB_SRC_VoltageDC))) {
                             if (rCount >= 6 && sCount >= 2) {
                                 double v2num = (result->cn[0] / result->rh[0]) + (result->cn[1] * ((1 / result->rh[2]) + (1 / (result->rh[5] + result->rh[4] + result->rh[3]))));
                                 double v2den = ((1 / result->rh[0]) + (1 / result->rh[1]) + (1 / result->rh[2]) + (1 / (result->rh[5] + result->rh[4] + result->rh[3])));
@@ -222,86 +222,96 @@ memset(result, 0, sizeof(*result));
                         }
                     }
                         }
-                        else if (out->sources[0].type == CB_SRC_CurrentDC && out->sources[1].type == CB_SRC_CurrentDC) {
+                        if (((out->sources[0].type == CB_SRC_CurrentDC)) && ((out->sources[1].type == CB_SRC_CurrentDC))) {
 
-                            result->summer[0] = result->rh[1] * (result->cn[0] + result->cn[1]);
-                            double foo = (result->rh[1] * (result->cn[0] + result->cn[1]));
-                            result->summer[1] = (foo - (result->rh[5] * result->cn[1]));
-                            double foo1 = (result->rh[1] * (result->cn[0] + result->cn[1]));
-                            double foo2 = (result->cn[1] * (result->rh[4] - result->rh[5]));
-                            result->summer[2] = foo1 - foo2;
-                        }
-                        else if (out->sources[0].type == CB_SRC_CurrentDC && out->sources[1].type == CB_SRC_VoltageDC) {
                             double D, V2, V4, V5;
-                               D =
-                                    result->rh[1]*result->rh[2]
-                                + result->rh[1]*result->rh[3]
-                                - result->rh[1]*result->rh[4]
-                                - result->rh[1]*result->rh[5]
-                                - result->rh[2]*result->rh[3]
-                                + result->rh[2]*result->rh[4]
-                                + result->rh[2]*result->rh[5];
+                            
 
-                            V2 = (result->rh[1] *
-                                    (
-                                        -result->cn[0]*result->rh[2]*result->rh[3]
-                                        + result->cn[0]*result->rh[2]*result->rh[4]
-                                        + result->cn[0]*result->rh[2]*result->rh[5]
-                                        + result->rh[2]*result->cn[1]
-                                        + result->rh[3]*result->cn[1]
-                                        - result->rh[4]*result->cn[1]
-                                        - result->rh[5]*result->cn[1]
-                                    )
-                                ) / D;
+                            D = result->rh[2] + result->rh[3] + result->rh[4] + result->rh[5];
+
+                            V2 = result->rh[1] * (result->cn[0] + result->cn[1]);
 
                             V4 = (
-                                    -result->cn[0]*result->rh[1]*result->rh[2]*result->rh[3]
-                                    + result->cn[0]*result->rh[1]*result->rh[2]*result->rh[4]
-                                    + result->rh[1]*result->rh[2]*result->cn[1]
-                                    + result->rh[1]*result->rh[3]*result->cn[1]
-                                    - result->rh[1]*result->rh[4]*result->cn[1]
-                                    - result->rh[1]*result->rh[5]*result->cn[1]
-                                    + result->rh[2]*result->rh[5]*result->cn[1]
-                                ) / D;
+                                result->cn[0]*result->rh[1]*D
+                                + result->cn[1]*result->rh[1]*D
+                                + result->cn[1]*result->rh[2]*result->rh[5]
+                            ) / D;
+
                             V5 = (
-                                    -result->cn[0]*result->rh[1]*result->rh[2]*result->rh[3]
-                                    + result->rh[1]*result->rh[2]*result->cn[1]
-                                    + result->rh[1]*result->rh[3]*result->cn[1]
-                                    - result->rh[1]*result->rh[4]*result->cn[1]
-                                    - result->rh[1]*result->rh[5]*result->cn[1]
-                                    + result->rh[2]*result->rh[4]*result->cn[1]
-                                    + result->rh[2]*result->rh[5]*result->cn[1]
-                                ) / D;
+                                result->cn[0]*result->rh[1]*D
+                                + result->cn[1]*result->rh[1]*D
+                                + result->cn[1]*result->rh[2]*
+                                    (result->rh[3] + result->rh[4] + result->rh[5])
+                            ) / D;
                             result->summer[0] = V2;
                             result->summer[1] = V4;
                             result->summer[2] = V5;
-
                         }
-                        else if (out->sources[0].type == CB_SRC_VoltageDC && out->sources[1].type == CB_SRC_CurrentDC) {
-                            
-                            double D;
-                            D = result->rh[0] - result->rh[1];
-                            
-                            result->summer[0] =
-                                (
-                                    result->rh[1] *
-                                    (
-                                        2.0 * result->cn[1] * result->rh[0]
-                                        - result->cn[0]
+                        if (((out->sources[0].type == CB_SRC_CurrentDC) && (out->sources[1].type == CB_SRC_VoltageDC))) {
+                            double D, V2, V4, V5;
+                                D =
+                                    result->rh[1]*result->rh[2]
+                                    + result->rh[1]*result->rh[3]
+                                    + result->rh[1]*result->rh[4]
+                                    + result->rh[1]*result->rh[5]
+                                    + result->rh[2]*result->rh[3]
+                                    + result->rh[2]*result->rh[4]
+                                    + result->rh[2]*result->rh[5];
+
+                                V2 = (
+                                    result->rh[1] * (
+                                        result->cn[0]*result->rh[2]*
+                                            (result->rh[3] + result->rh[4] + result->rh[5])
+                                        + result->cn[1]*
+                                            (result->rh[2] + result->rh[3] + result->rh[4] + result->rh[5])
                                     )
                                 ) / D;
-                            result->summer[1] = (2.0 * result->cn[1] * result->rh[0] * result->rh[1]
-                                    + result->cn[1] * result->rh[0] * result->rh[5]
-                                    - result->cn[1] * result->rh[1] * result->rh[5]
-                                    - result->rh[1] * result->cn[0]
+
+                                V4 = (
+                                    result->cn[0]*result->rh[1]*result->rh[2]*
+                                        (result->rh[3] + result->rh[4])
+
+                                    + result->cn[1]*(
+                                        result->rh[1]*result->rh[2]
+                                        + result->rh[1]*result->rh[3]
+                                        + result->rh[1]*result->rh[4]
+                                        + result->rh[1]*result->rh[5]
+                                        + result->rh[2]*result->rh[5]
+                                    )
                                 ) / D;
-                            result->summer[2] =  (2.0 * result->cn[1] * result->rh[0] * result->rh[1]
-                                    + result->cn[1] * result->rh[0] * result->rh[4]
-                                    + result->cn[1] * result->rh[0] * result->rh[5]
-                                    - result->cn[1] * result->rh[1] * result->rh[4]
-                                    - result->cn[1] * result->rh[1] * result->rh[5]
-                                    - result->rh[1] * result->cn[0]
+
+                                V5 = result->cn[1];
+
+                                
+                                result->summer[0] = V2;
+                                result->summer[1] = V4;
+                                result->summer[2] = V5;
+
+
+                        }
+                        if (((out->sources[0].type == CB_SRC_VoltageDC) && (out->sources[1].type == CB_SRC_CurrentDC))) {
+                            
+                            double D;
+                            D = (result->rh[0] + result->rh[1]) * (result->rh[2] + result->rh[3] + result->rh[4] + result->rh[5]);
+                            
+                            result->summer[0] =
+                                (result->rh[1] * (result->cn[1] * result->rh[0] + result->cn[0])) / (result->rh[0] + result->rh[1]);
+
+                            result->summer[1] = (
+                                    result->cn[1]*result->rh[0]*result->rh[1]*
+                                        (result->rh[2] + result->rh[3] + result->rh[4] + result->rh[5])
+
+                                    + result->cn[1]*result->rh[2]*result->rh[5]*
+                                        (result->rh[0] + result->rh[1])
+
+                                    + result->rh[1]*result->cn[0]*
+                                        (result->rh[2] + result->rh[3] + result->rh[4] + result->rh[5])
                                 ) / D;
+                            result->summer[2] =  (
+                                            result->cn[1]*result->rh[0]*result->rh[1]*(result->rh[2] + result->rh[3] + result->rh[4] + result->rh[5])
+                                        + result->cn[1]*result->rh[2]*(result->rh[3] + result->rh[4] + result->rh[5])*(result->rh[0] + result->rh[1])
+                                        + result->rh[1]*result->cn[0]*(result->rh[2] + result->rh[3] + result->rh[4] + result->rh[5])
+                                        ) / D;
                         }
                 break;
                 case CB_G_AcDcSinusoidal:
