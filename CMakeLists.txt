@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.20)
 project(compcircuits
     VERSION 0.1.0
     DESCRIPTION "Gamified/Competitive circuit analysis for EE students"
-    LANGUAGES C
+    LANGUAGES C 
 )
 
 

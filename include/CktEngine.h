@@ -92,6 +92,8 @@ typedef struct {
     unsigned n1, n2;
     double value;
     double imag;
+    double rea;
+    double ima;
 } CB_Component;
 
 typedef struct {

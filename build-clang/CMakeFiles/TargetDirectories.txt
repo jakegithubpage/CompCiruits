@@ -1,0 +1,4 @@
+C:/Users/jmccl/CompCircuits/build-clang/CMakeFiles/compcircuits.dir
+C:/Users/jmccl/CompCircuits/build-clang/CMakeFiles/compcircuits_cli.dir
+C:/Users/jmccl/CompCircuits/build-clang/CMakeFiles/edit_cache.dir
+C:/Users/jmccl/CompCircuits/build-clang/CMakeFiles/rebuild_cache.dir

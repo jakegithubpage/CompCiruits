@@ -80,17 +80,54 @@ memset(result, 0, sizeof(*result));
                     }
                 break;
                 case CB_G_AcDcSinusoidal:
+                    if(out->sources[i].type == CB_SRC_VoltageDC) {
+                    unsigned mark = 0;
+                            for (unsigned j = 0; j < out->componentCount; j++) {
+                                if (out->components[j].imag != 0.0) {
+                                    mark = 1;
+                                }
+                            }
+                            switch (mark){
+                                case 0:
+                                    result->summer[0] = 0;
+                                break;
+                                case 1:
+                                    result->summer[0] = 0;
+                                break;
+                            }
+                        }
+
                     
+                    else if(out->sources[i].type == CB_SRC_CurrentDC) {
+                        unsigned mark = 0;
+                            for (unsigned j = 0; j < out->componentCount; j++) {
+                                if (out->components[j].imag != 0.0) {
+                                    mark = 1;
+                                }
+                            }
+                            switch (mark) {
+                                case 0:
+                                    result->summer[0] = 0;
+                                break;
+                                case 1:
+                                    result->summer[0] = 0;
+                                break;
+                            }
+                    }
+
+                        
+                    
+                    //Start Development on Complex handling with Mixed AcDc genre
                 break;
                 case CB_G_AcSinusoidal:
 
                 break;
-                    
-                
-            
+                 
+                }
             }
-        }
-    }
+            }
+        
+    
     else if (out->nodeCount == 2u) { 
             for (unsigned i = 0; i < rCount; i++) {
                 switch(out->opts.genre) {

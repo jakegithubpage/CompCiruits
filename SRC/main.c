@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <math.h>
+#include <complex.h>
 //Headers
 #include "main.h"
 #include "cc_DcMatrix.h"
@@ -77,6 +78,9 @@ static void print_ckt_details(const CB_Ckt *ckt) {
       else {
          double rel = sqrt((re * re) + (im * im));
          double ima = atan(im / re) * (180.0 / 3.14159265358979323);
+         //Implement on node voltage print out! Specificallly change to polar
+         //c->rea = rel;
+         //c->ima = ima;
          if (c->type == CB_COMP_CAP) {
             printf("Component [%u]: type = %d | n1 = %u | n2 = %u | rect = %g  %+gj | polar = %g < %+g Farad\n",
                i, (int)c->type, c->n1, c->n2, c->value, c->imag, rel, ima);
@@ -157,12 +161,12 @@ int main(void) {
    int d, g, n;
    char s[8] = {0};
    int ok;
-
+   
    memset(&ckt, 0, sizeof(ckt));
 
    printf("Select Difficulty -> (0=Easy, 1=Medium, 2=Hard, 3=Extreme, 4=Einstein): ");
    if (scanf("%d", &d) != 1) return 1;
-
+   
    printf("Select number type -> (0=Real, 1=Real/Complex, 2=Complex, 3=FreqDomain): ");
    if (scanf("%d", &n) != 1) return 1;
 
@@ -223,21 +227,21 @@ if (scanf(" %7s", s) != 1) return 1;
    if (_stricmp(s, "Yes") == 0){
       cc_calculator(&ckt, &result);
       
-      if ((ckt.nodeCount == 1u)) {
+      if (ckt.nodeCount == 1u) {
          printf("2 total nodes in your build\n");
          for (unsigned i = 0; i < ckt.nodeCount; i++) {
             if (result.summer[i] == 0) break;
                printf("Unknown Node %u = %.2f Volts\n", i, result.summer[i]);
          }
       }
-      if ((ckt.nodeCount == 2u)) {
+      if (ckt.nodeCount == 2u) {
          printf("3 total nodes in your build\n");
          for (unsigned i = 0; i < ckt.nodeCount; i++) {
             if (result.summer[i] == 0) break;
                printf("Unknown Node %u = %.2f Volts\n", i, result.summer[i]);
          }
       }
-      if ((ckt.nodeCount == 3u)) {
+      if (ckt.nodeCount == 3u) {
          printf("5 total nodes in your build\n");
          for (unsigned i = 0; i < ckt.nodeCount; i++) {
             if (result.summer[i] == 0) break;
