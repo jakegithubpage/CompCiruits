@@ -234,7 +234,7 @@ memset(result, 0, sizeof(*result));
 
             switch(out->opts.genre) {
                 case CB_G_dcSteady:
-                        if (((out->sources[0].type == CB_SRC_VoltageDC) && (out->sources[0].type == CB_SRC_VoltageDC))) {
+                        if (((out->sources[0].type == CB_SRC_VoltageDC) && (out->sources[1].type == CB_SRC_VoltageDC))) {
                             if (rCount >= 6 && sCount >= 2) {
                                 double v2num = (result->cn[0] / result->rh[0]) + (result->cn[1] * ((1 / result->rh[2]) + (1 / (result->rh[5] + result->rh[4] + result->rh[3]))));
                                 double v2den = ((1 / result->rh[0]) + (1 / result->rh[1]) + (1 / result->rh[2]) + (1 / (result->rh[5] + result->rh[4] + result->rh[3])));

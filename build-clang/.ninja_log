@@ -1,8 +1,8 @@
 # ninja log v7
-21	103	8044801726300084	CMakeFiles/compcircuits.dir/SRC/cc_DcMatrix.c.obj	22a5c3f5f50182dd
-29	111	8044801726369443	CMakeFiles/compcircuits.dir/SRC/cc_solver.c.obj	b18e314daf2d5d0d
-34	120	8044801726428954	CMakeFiles/compcircuits.dir/SRC/CktEngine.c.obj	d43a6941da524812
-120	200	8044801727288399	compcircuits.lib	4ca8a301f0e52b90
-46	315	8044801726550858	CMakeFiles/compcircuits_cli.dir/SRC/BaseGUI.c.obj	437f9d33cad879a6
-39	390	8044801726476097	CMakeFiles/compcircuits_cli.dir/SRC/main.c.obj	dd9576956d8f9596
-391	1996	8044801729996571	compcircuits_cli.exe	47b24b0679f508cf
+21	110	8045619573497691	CMakeFiles/compcircuits.dir/SRC/cc_DcMatrix.c.obj	22a5c3f5f50182dd
+28	118	8045619573569914	CMakeFiles/compcircuits.dir/SRC/cc_solver.c.obj	b18e314daf2d5d0d
+34	125	8045619573620900	CMakeFiles/compcircuits.dir/SRC/CktEngine.c.obj	d43a6941da524812
+126	200	8045619574538446	compcircuits.lib	4ca8a301f0e52b90
+47	306	8045619573747168	CMakeFiles/compcircuits_cli.dir/SRC/BaseGUI.c.obj	437f9d33cad879a6
+41	348	8045619573689318	CMakeFiles/compcircuits_cli.dir/SRC/main.c.obj	dd9576956d8f9596
+349	2089	8045619576767535	compcircuits_cli.exe	47b24b0679f508cf

@@ -1,4 +1,7 @@
 {
     "cmake.sourceDirectory": "C:/Users/jmccl/CompCircuits",
-    "editor.inlineSuggest.enabled": false
+    "editor.inlineSuggest.enabled": false,
+    "terminal.integrated.env.windows": {
+        "PATH": "C:\\Users\\jmccl\\Downloads\\llvm-mingw-20260616-ucrt-x86_64\\llvm\\bin;C:\\Program Files\\LLVM\\bin;${env:PATH}"
+    }
 }

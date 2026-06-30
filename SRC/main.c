@@ -1,4 +1,5 @@
 //Libraries
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <string.h>
 #include <process.h>
@@ -166,7 +167,8 @@ int main(void) {
 
    printf("Select Difficulty -> (0=Easy, 1=Medium, 2=Hard, 3=Extreme, 4=Einstein): ");
    if (scanf("%d", &d) != 1) return 1;
-   
+   _Dcomplex z = _Cbuild(10.0, 10.0);
+   printf("z = %.1f%+.1fi\n", creal(z), cimag(z));
    printf("Select number type -> (0=Real, 1=Real/Complex, 2=Complex, 3=FreqDomain): ");
    if (scanf("%d", &n) != 1) return 1;
 
