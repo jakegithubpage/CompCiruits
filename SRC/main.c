@@ -167,8 +167,7 @@ int main(void) {
 
    printf("Select Difficulty -> (0=Easy, 1=Medium, 2=Hard, 3=Extreme, 4=Einstein): ");
    if (scanf("%d", &d) != 1) return 1;
-   _Dcomplex z = _Cbuild(10.0, 10.0);
-   printf("z = %.1f%+.1fi\n", creal(z), cimag(z));
+   
    printf("Select number type -> (0=Real, 1=Real/Complex, 2=Complex, 3=FreqDomain): ");
    if (scanf("%d", &n) != 1) return 1;
 
@@ -233,13 +232,25 @@ if (scanf(" %7s", s) != 1) return 1;
          printf("2 total nodes in your build\n");
          for (unsigned i = 0; i < ckt.nodeCount; i++) {
             if (result.summer[i] == 0) break;
-               printf("Unknown Node %u = %.2f Volts\n", i, result.summer[i]);
+               switch(ckt.opts.genre){
+                  case CB_G_dcSteady:
+                     printf("Unknown Node %u = %.2f Volts\n", i, result.summer[i]);
+                  break;
+                  case CB_G_AcDcSinusoidal:
+                     printf("Unknown Node %u = %.4f %+.4fj V\n", i, creal(result.cosummer[i]), cimag(result.cosummer[i]));
+                  break;
+                  case CB_G_AcSinusoidal:
+                     printf("Unknown Node %u = %.4f %+.4fj V\n", i, creal(result.cosummer[i]), cimag(result.cosummer[i]));
+                  break;
+               }
+               
          }
       }
       if (ckt.nodeCount == 2u) {
          printf("3 total nodes in your build\n");
          for (unsigned i = 0; i < ckt.nodeCount; i++) {
             if (result.summer[i] == 0) break;
+            
                printf("Unknown Node %u = %.2f Volts\n", i, result.summer[i]);
          }
       }

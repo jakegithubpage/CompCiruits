@@ -179,10 +179,12 @@ static void assign_numType_value(CB_Component *c, SwitchNumType numTypeSw) {
       case SWITCH_RECO:
          if (rand_range_int(0,1) == 1) {
             c->imag = rand_range_double(-5000.0, 5000.0);
+            c->imHold = _Cbuild(c->value, c->imag);
          }
       break;
       case SWITCH_COMP:
          c->imag = rand_range_double(-5000.0, 5000.0);
+         c->imHold = _Cbuild(c->value, c->imag);
       break;
       case SWITCH_FREQ:
 
@@ -230,11 +232,13 @@ static void assign_genreBase_Source(CB_Genre genre, CB_Source *s) {
             s->type = CB_SRC_VoltageAC;
             s->value = rand_range_double(1.0, 50.0);
             s->imag = rand_range_double(-500.0, 500.0);
+            s->imHold = _Cbuild(s->value, s->imag);
          }
          else {
             s->type = CB_SRC_CurrentAC;
             s->value = rand_range_double(1.0, 10.0);
             s->imag = rand_range_double(-500.0, 500.0);
+            s->imHold = _Cbuild(s->value, s->imag);
          }
       break;
    }

@@ -1,6 +1,7 @@
 #pragma once
-
-
+#include <math.h>
+#include <complex.h>
+#include "cc_complex.h"
 typedef struct CB_Ckt CB_Ckt;
 
 #define resistorHoldMax 64
@@ -14,6 +15,11 @@ typedef struct cc_solverUses{
     double rh[resistorHoldMax];
     double irh[imagRHoldMax];
     double summer[sumHoldMax];
+    int realCount[nodeHoldMax];
+    int imagCount[nodeHoldMax];
+    _Dcomplex cocn[nodeHoldMax];
+    _Dcomplex corh[resistorHoldMax];
+    cc_complex cosummer[sumHoldMax];
 } cc_solverUses;
 
 

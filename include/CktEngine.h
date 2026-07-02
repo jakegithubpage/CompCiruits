@@ -85,6 +85,7 @@ typedef struct {
     unsigned nPlus, nMinus;
     double value;
     double imag;
+    _Dcomplex imHold;
 } CB_Source;
 
 typedef struct {
@@ -94,6 +95,7 @@ typedef struct {
     double imag;
     double rea;
     double ima;
+    _Dcomplex imHold;
 } CB_Component;
 
 typedef struct {

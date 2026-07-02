@@ -4,7 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-
+#include <complex.h>
+#include <corecrt_math_defines.h>
 #include "cc_solver.h"
 #include "CktEngine.h"
 
@@ -81,37 +82,60 @@ memset(result, 0, sizeof(*result));
                 break;
                 case CB_G_AcDcSinusoidal:
                     if(out->sources[i].type == CB_SRC_VoltageDC) {
-                    unsigned mark = 0;
+                        unsigned mark = 0;
                             for (unsigned j = 0; j < out->componentCount; j++) {
                                 if (out->components[j].imag != 0.0) {
-                                    mark = 1;
+                                    result->corh[j] = out->components[j].imHold;
+                                    mark++;
+                                    break;
                                 }
                             }
                             switch (mark){
                                 case 0:
-                                    result->summer[0] = 0;
+                                    double den = result->rh[i] + result->rh[i + 1];
+                                    if (den == 0.0) break;
+                                    result->summer[i] = result->cn[i] * (result->rh[i] / den);
                                 break;
                                 case 1:
-                                    result->summer[0] = 0;
+                                    int realCount = 0;
+                                    int imagCount = 0;
+                                        for (unsigned f = 0; f < out->componentCount; f++) {
+                                            if (out->components[f].imag == 0.0)
+                                                result->realCount[realCount++] = f;
+                                            else
+                                                result->imagCount[imagCount++] = f;
+                                }
+                                if (realCount > 0 && imagCount > 0) {
+                                    cc_complex a = cc_build(
+                                        result->rh[result->realCount[0]],
+                                        result->irh[result->realCount[0]]);
+                                    cc_complex b = cc_build(
+                                        result->rh[result->imagCount[0]],
+                                        result->irh[result->imagCount[0]]);
+                                    cc_complex den = cc_add(a, b);
+                                    if (cc_abs(den) < 1e-12) break;
+                                    cc_complex source = cc_build(out->sources[0].value, 0.0);
+                                    cc_complex prod = cc_mul(cc_div(a, den), source);
+                                    result->cosummer[0] = prod;
+                                    
+                                break;
+                                case 2:
+                                    cc_complex a = cc_build(result->rh[i],     result->irh[i]);
+                                cc_complex b = cc_build(result->rh[i + 1], result->irh[i + 1]);
+                                cc_complex den = cc_add(a, b);
+                                if (cc_abs(den) < 1e-12) break;
+                                cc_complex source = cc_build(out->sources[0].value, 0.0);
+                                result->cosummer[0] = cc_mul(cc_div(b, den), source);
+
+                                    
                                 break;
                             }
                         }
 
                     
                     else if(out->sources[i].type == CB_SRC_CurrentDC) {
-                        unsigned mark = 0;
-                            for (unsigned j = 0; j < out->componentCount; j++) {
-                                if (out->components[j].imag != 0.0) {
-                                    mark = 1;
-                                }
-                            }
-                            switch (mark) {
-                                case 0:
-                                    result->summer[0] = 0;
-                                break;
-                                case 1:
-                                    result->summer[0] = 0;
-                                break;
+                        
+                            
                             }
                     }
 
@@ -173,7 +197,7 @@ memset(result, 0, sizeof(*result));
                     if (den == 0.0) break;
                     result->summer[0] = (result->cn[0] / result->rh[3]) / den;
                     double den2 = result->rh[0] + result->rh[1];
-                    if (den2 != 0.0) break;
+                    if (den2 == 0.0) break;
                     result->summer[1] = result->summer[0] * (result->rh[0] / den2);
                 }
                 else if (out->sources[i].type == CB_SRC_CurrentDC) {
