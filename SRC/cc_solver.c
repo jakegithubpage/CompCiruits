@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <complex.h>
+#include <math.h>
 #include <corecrt_math_defines.h>
 #include "cc_solver.h"
 #include "CktEngine.h"
@@ -12,9 +13,67 @@
 
 #define MAX_LOADER 32
 
+cc_complex comp_create(double real, double imag) {
+    cc_complex z;
+    z.real = real;
+    z.imag = imag;
+    return z;
+}
+cc_complex comp_add(cc_complex a, cc_complex b) {
+    cc_complex result;
+
+    result.real = a.real + b.real;
+    result.imag = a.imag + b.imag;
+
+    return result;
+}
+
+cc_complex comp_sub(cc_complex a, cc_complex b){
+    cc_complex result;
+    result.real = a.real - b.real;
+    result.imag = a.imag - b.imag;
+
+    return result;
+}
+
+cc_complex comp_mul(cc_complex a, cc_complex b){
+    cc_complex result;
+    result.real = (a.real * b.real) - (a.imag * b.imag);
+    result.imag = (a.real * b.imag) + (a.imag * b.real);
+
+    return result;
+}
+
+cc_complex comp_div(cc_complex a, cc_complex b){
+    cc_complex result;
+    double denom;
+
+    denom = (b.real * b.real) + (b.imag * b.imag);
+
+    result.real = ((a.real * b.real) - (a.imag * b.imag)) / denom;
+    result.imag = ((a.imag * b.real) + (a.real * b.imag)) / denom;
+
+    return result;
+}
+
+double comp_mag(cc_complex z) {
+    return sqrt(z.real * z.real + z.imag * z.imag);
+}
+
+double comp_phase(cc_complex z){
+    return atan2(z.imag, z.real);
+}
+
+cc_complex comp_conj(cc_complex z){
+    return comp_create(
+        z.real,
+        -z.imag
+    );
+}
 
 void cc_calculator(const CB_Ckt *out, cc_solverUses *result) {
 if (!out || !result) return;
+
 
 memset(result, 0, sizeof(*result));
 
@@ -92,9 +151,9 @@ memset(result, 0, sizeof(*result));
                             }
                             switch (mark){
                                 case 0:
-                                    double den = result->rh[i] + result->rh[i + 1];
-                                    if (den == 0.0) break;
-                                    result->summer[i] = result->cn[i] * (result->rh[i] / den);
+                                    double den1 = result->rh[i] + result->rh[i + 1];
+                                    if (den1 == 0.0) break;
+                                    result->summer[i] = result->cn[i] * (result->rh[i] / den1);
                                 break;
                                 case 1:
                                     int realCount = 0;
@@ -104,40 +163,38 @@ memset(result, 0, sizeof(*result));
                                                 result->realCount[realCount++] = f;
                                             else
                                                 result->imagCount[imagCount++] = f;
-                                }
-                                if (realCount > 0 && imagCount > 0) {
-                                    cc_complex a = cc_build(
+                                        }
+                                    if (realCount > 0 && imagCount > 0) {
+                                        cc_complex a = comp_create(
                                         result->rh[result->realCount[0]],
                                         result->irh[result->realCount[0]]);
-                                    cc_complex b = cc_build(
+                                        cc_complex b = comp_create(
                                         result->rh[result->imagCount[0]],
                                         result->irh[result->imagCount[0]]);
-                                    cc_complex den = cc_add(a, b);
-                                    if (cc_abs(den) < 1e-12) break;
-                                    cc_complex source = cc_build(out->sources[0].value, 0.0);
-                                    cc_complex prod = cc_mul(cc_div(a, den), source);
-                                    result->cosummer[0] = prod;
+                                        cc_complex den = comp_add(a, b);
+                                    
+                                        cc_complex source = comp_create(out->sources[0].value, 0.0);
+                                        cc_complex prod = comp_mul(comp_div(a, den), source);
+                                        result->cosummer[0] = prod;
+                                        }
                                     
                                 break;
                                 case 2:
-                                    cc_complex a = cc_build(result->rh[i],     result->irh[i]);
-                                cc_complex b = cc_build(result->rh[i + 1], result->irh[i + 1]);
-                                cc_complex den = cc_add(a, b);
-                                if (cc_abs(den) < 1e-12) break;
-                                cc_complex source = cc_build(out->sources[0].value, 0.0);
-                                result->cosummer[0] = cc_mul(cc_div(b, den), source);
-
-                                    
+                                    cc_complex aa = comp_create(result->rh[i], result->irh[i]);
+                                    cc_complex bb = comp_create(result->rh[i + 1], result->irh[i + 1]);
+                                    cc_complex den = comp_add(aa, bb);
+                                    cc_complex sourcer = comp_create(out->sources[0].value, 0.0);
+                                    result->cosummer[0] = comp_mul(comp_div(bb, den), sourcer);
                                 break;
                             }
                         }
 
                     
-                    else if(out->sources[i].type == CB_SRC_CurrentDC) {
+                        else if(out->sources[i].type == CB_SRC_CurrentDC) {
                         
                             
-                            }
-                    }
+                        }
+                    
 
                         
                     
@@ -146,10 +203,10 @@ memset(result, 0, sizeof(*result));
                 case CB_G_AcSinusoidal:
 
                 break;
-                 
+                    }
                 }
             }
-            }
+            
         
     
     else if (out->nodeCount == 2u) { 
