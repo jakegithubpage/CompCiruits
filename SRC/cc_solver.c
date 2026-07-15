@@ -146,7 +146,7 @@ memset(result, 0, sizeof(*result));
                                 if (out->components[j].imag != 0.0) {
                                     result->corh[j] = out->components[j].imHold;
                                     mark++;
-                                    break;
+                                    
                                 }
                             }
                             switch (mark){
@@ -178,6 +178,7 @@ memset(result, 0, sizeof(*result));
                                         result->cosummer[0] = prod;
                                         }
                                     
+                                    
                                 break;
                                 case 2:
                                     cc_complex aa = comp_create(result->rh[i], result->irh[i]);
@@ -191,7 +192,55 @@ memset(result, 0, sizeof(*result));
 
                     
                         else if(out->sources[i].type == CB_SRC_CurrentDC) {
-                        
+                            unsigned mark1 = 0;
+                                for (unsigned x = 0; x < out->componentCount; x++) {
+                                    if (out->components[x].imag != 0.0) {
+                                        result->corh[x] = out->components[x].imHold;
+                                        mark1++;
+                                        
+                                    }
+                                }
+                                switch(mark1) {
+                                    case 0:
+                                        result->summer[i] = out->sources[0].value * out->components[1].value;
+                                    break;
+                                    case 1:
+                                        int realCount1 = 0;
+                                        int imagCount1 = 0;
+                                        for (unsigned y; y < out->componentCount; y++){
+                                            if(out->components[y].imag == 0.0){
+                                                result->realCount[realCount1++] = y;
+                                            }
+                                            else {
+                                                result->imagCount[imagCount1++] = y;
+                                            }
+                                        }
+                                        if(out->components[0].imag == 0.0){
+                                            cc_complex a = comp_create(result->rh[1],
+                                                                       result->irh[1]);
+                                            cc_complex b = comp_create(result->cn[0],
+                                                                       result->ich[0]);
+                                            cc_complex prods = comp_mul(b, a);
+                                            result->cosummer[i] = prods;
+                                        }
+                                        else {
+                                            cc_complex q = comp_create(result->rh[1],
+                                                                       result->irh[1]);
+                                            cc_complex qq = comp_create(result->cn[0],
+                                                                        result->ich[0]);
+                                            cc_complex qproder = comp_mul(q, qq);
+                                            result->cosummer[i] = qproder;
+                                        }
+                                    break;
+                                    case 2:
+                                        cc_complex aa = comp_create(result->rh[1],
+                                                                    result->irh[1]);
+                                        cc_complex bb = comp_create(result->cn[0],
+                                                                    result->ich[0]);
+                                        cc_complex proder = comp_mul(aa, bb);
+                                        result->cosummer[i] = proder;
+                                    break;
+                                }
                             
                         }
                     
