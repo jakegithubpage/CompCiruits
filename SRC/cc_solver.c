@@ -207,7 +207,7 @@ memset(result, 0, sizeof(*result));
                                     case 1:
                                         int realCount1 = 0;
                                         int imagCount1 = 0;
-                                        for (unsigned y; y < out->componentCount; y++){
+                                        for (unsigned y = 0; y < out->componentCount; y++){
                                             if(out->components[y].imag == 0.0){
                                                 result->realCount[realCount1++] = y;
                                             }
@@ -250,6 +250,27 @@ memset(result, 0, sizeof(*result));
                     //Start Development on Complex handling with Mixed AcDc genre
                 break;
                 case CB_G_AcSinusoidal:
+                        if (out->sources[0].type == CB_SRC_VoltageAC) {
+                                cc_complex a = comp_create(result->cn[0], result->ich[0]);
+                                cc_complex scroll[2] = {comp_create(0.0, 0.0), comp_create(0.0, 0.0)};
+                                for (unsigned y = 0; y < out->componentCount; y++) {
+                                    scroll[y] = comp_create(result->rh[y], result->irh[y]);
+                                }
+
+                                cc_complex d = comp_add(scroll[0], scroll[1]);
+                                cc_complex e = comp_div(d, scroll[1]);
+                                cc_complex f = comp_mul(a,e);
+                                result->cosummer[0] = f;    
+                        }
+                        else if (out->sources[0].type == CB_SRC_CurrentAC) {
+                                cc_complex aa = comp_create(result->cn[0], result->ich[0]);
+                                cc_complex sccroll[2] = {comp_create(0.0, 0.0), comp_create(0.0, 0.0)};
+                                for (unsigned ye = 0; ye < out->componentCount; ye++) {
+                                    sccroll[ye] = comp_create(result->rh[ye], result->irh[ye]);
+                                }
+                                cc_complex dd = comp_mul(sccroll[0], aa);
+                                result->cosummer[0] = dd;
+                        }
 
                 break;
                     }
@@ -316,7 +337,7 @@ memset(result, 0, sizeof(*result));
                 }
             break;
             case CB_G_AcDcSinusoidal:
-
+                
             break;
             case CB_G_AcSinusoidal:
 
