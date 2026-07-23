@@ -266,8 +266,32 @@ if (scanf(" %7s", s) != 1) return 1;
          printf("3 total nodes in your build\n");
          for (unsigned i = 0; i < ckt.nodeCount; i++) {
             if (result.summer[i] == 0) break;
-            
-               printf("Unknown Node %u = %.2f Volts\n", i, result.summer[i]);
+            printf("loading");
+            for (unsigned j = 0; j < 10; j++) {
+               if(j % 2 == 0) {
+                  printf("..\n");
+               }
+               else if (j % 2 == 1) {
+                  printf("....\n");
+               }
+            }
+            switch(ckt.opts.genre){
+               case CB_G_dcSteady:
+                  printf("Unknown Node %u = %.2f Volts\n", i, result.summer[i]);
+               break;
+               case CB_G_AcDcSinusoidal:
+                  if(result.cosummer[i].imag == 0){
+                     printf("Unknown Node %u = %.2f Volts\n", i, result.summer[i]);
+                  }
+                  else{
+                     printf("Unknown Node %u = %.4f %+.4fj V\n", i, result.cosummer[i].real, result.cosummer[i].imag);
+                  }
+               break;
+               case CB_G_AcSinusoidal:
+                  printf("Unknown Node %u = %.4f %+.4fj V\n", i, result.cosummer[i].real, result.cosummer[i].imag);
+               break;
+            }
+               
          }
       }
       if (ckt.nodeCount == 3u) {

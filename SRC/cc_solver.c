@@ -314,36 +314,61 @@ memset(result, 0, sizeof(*result));
                 }
             }
 
-    for (unsigned i = 0;((i < sumHoldMax) && (i + 1 < rCount && i < sCount)); i++) {
-        switch(out->opts.genre) {
-            case CB_G_dcSteady:
-                if (result->rh[i] == 0) break;
-                        
-                if(out->sources[i].type == CB_SRC_VoltageDC) { 
-                    double den = ((1 / result->rh[2]) + (1 / (result->rh[0] + result->rh[1])) + (1 / result->rh[3]));
-                    if (den == 0.0) break;
-                    result->summer[0] = (result->cn[0] / result->rh[3]) / den;
-                    double den2 = result->rh[0] + result->rh[1];
-                    if (den2 == 0.0) break;
-                    result->summer[1] = result->summer[0] * (result->rh[0] / den2);
+            for (unsigned i = 0;((i < sumHoldMax) && (i + 1 < rCount && i < sCount)); i++) {
+                switch(out->opts.genre) {
+                    case CB_G_dcSteady:
+                        if (result->rh[i] == 0) break;
+                                
+                        if(out->sources[i].type == CB_SRC_VoltageDC) { 
+                            double den = ((1 / result->rh[2]) + (1 / (result->rh[0] + result->rh[1])) + (1 / result->rh[3]));
+                            if (den == 0.0) break;
+                            result->summer[0] = (result->cn[0] / result->rh[3]) / den;
+                            double den2 = result->rh[0] + result->rh[1];
+                            if (den2 == 0.0) break;
+                            result->summer[1] = result->summer[0] * (result->rh[0] / den2);
+                        }
+                        else if (out->sources[i].type == CB_SRC_CurrentDC) {
+                            double den = (result->rh[3] + result->rh[2] + result->rh[1]);
+                            if (den == 0.0) break;
+                            result->summer[0] = ((result->rh[1] * result->rh[3]) / den) * result->cn[0];
+                            result->summer[1] = ((result->rh[1] * (result->rh[2] + result->rh[3])) / den) * result->cn[0];
+                        }
+                    break;
+                    case CB_G_AcDcSinusoidal:
+                        if (result->rh[i] == 0) break;
+
+                        if(out->sources[i].type == CB_SRC_VoltageDC){
+                            cc_complex a = comp_create(result->cn[0], result->ich[0]);
+                            cc_complex scroll[6] = {comp_create(0.0, 0.0), comp_create(0.0, 0.0),
+                                                    comp_create(0.0, 0.0), comp_create(0.0, 0.0),
+                                                    comp_create(0.0, 0.0), comp_create(0.0, 0.0)};
+                            for (unsigned ye = 0; ye < ckt->nodeCount; ye++){
+                                scroll[ye] = comp_create(result->rh[ye], result->irh[ye]);
+                            }
+                            cc_complex oner = comp_create(1,0);
+                            cc_complex den1 = comp_div(oner, scroll[2]);
+                            cc_complex den2 = comp_add(scroll[0], scroll[1]);
+                            cc_complex den21 = comp_div(oner, den2);
+                            cc_complex den3 = comp_div(oner, scroll[3]);
+                            cc_complex denadd1 = comp_add(den1, den21);
+                            cc_complex denadd2 = comp_add(denadd1, den3);
+                            cc_complex num1 = comp_div(a, scroll[3]);
+                            cc_complex num2 = comp_div(num1, denadd2);
+                            result->cosummer[0] = num2;
+                            cc_complex tden1 = comp_add(scroll[0], scroll[1]);
+                            cc_complex tdendiv = comp_div(scroll[0], tden1);
+                            cc_complex tdenfin = comp_mul(result->cosummer[0], tdendiv);
+                            result->cosummer[1] = tdenfin;
+                        }
+                        else if(out->sources[i].type == CB_SRC_CurrentDC){
+                            //NEXT ITEM
+                        }
+                    break;
+                    case CB_G_AcSinusoidal:
+
+                    break;
                 }
-                else if (out->sources[i].type == CB_SRC_CurrentDC) {
-                    double den = (result->rh[3] + result->rh[2] + result->rh[1]);
-                    if (den == 0.0) break;
-                    result->summer[0] = ((result->rh[1] * result->rh[3]) / den) * result->cn[0];
-                    result->summer[1] = ((result->rh[1] * (result->rh[2] + result->rh[3])) / den) * result->cn[0];
-
-
-                }
-            break;
-            case CB_G_AcDcSinusoidal:
-                
-            break;
-            case CB_G_AcSinusoidal:
-
-            break;
-        }
-    }
+            }
                 
     }
     else if (out->nodeCount == 3u) {
@@ -509,8 +534,7 @@ memset(result, 0, sizeof(*result));
 
                 break;  
             }
-        }
-            
+        }        
     }
     
 
